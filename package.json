@@ -1,0 +1,18 @@
+{
+  "name": "guesswork",
+  "version": "0.0.0",
+  "description": "Web component property-based test runner.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lastmjs/guesswork.git"
+  },
+  "author": "Jordan Last <jordan.michael.last@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lastmjs/guesswork/issues"
+  },
+  "homepage": "https://github.com/lastmjs/guesswork#readme"
+}

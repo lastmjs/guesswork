@@ -1,0 +1,22 @@
+<link rel="import" href="">
+
+<dom-module id="test-runner">
+    <template>
+    </template>
+
+    <script>
+        class TestRunner {
+            beforeRegister() {
+                this.is = 'test-runner';
+            }
+
+            ready() {
+                const children = Array.from(this.children);
+
+                console.log(children);
+            }
+        }
+
+        Polymer(TestRunner);
+    </script>
+</dom-module>
