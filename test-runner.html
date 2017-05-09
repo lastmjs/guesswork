@@ -1,19 +1,51 @@
-<link rel="import" href="">
+<link rel="import" href="../polymer/polymer.html">
 
 <dom-module id="test-runner">
     <template>
+        <content id="testRunnerContent">
+        </content>
+
+        <button on-click="runTests">Run tests</button>
+
+        <br>
+        <br>
+
+        <template is="dom-repeat" items="[[testComponents]]">
+            <div><input id="[[item.localName]]-should-run-input" type="checkbox"> [[item.localName]]: # inputs to generate <input id="[[item.localName]]-num-tests-input" type="number"></div>
+            <template is="dom-repeat" items="[[tests[item.localName]]]">
+                <div>[[item.test]]</div>
+            </template>
+        </template>
     </template>
 
     <script>
         class TestRunner {
             beforeRegister() {
                 this.is = 'test-runner';
+                this.tests = {};
             }
 
-            ready() {
-                const children = Array.from(this.children);
+            //TODO figure out the idiomatic way to access the "light DOM" children in Polymer 2 or just plain custom elements once we upgrade this to the V1 specs
+            attached() {
+                this.testComponents = this.getContentChildren('#testRunnerContent');
+            }
 
-                console.log(children);
+            addTest(localName, test) {
+                this.tests[localName] = [...(this.tests[localName] || []), test];
+            }
+
+            runTests() {
+                this.testComponents.forEach((testComponent) => {
+                    const shouldRun = this.querySelector(`#${testComponent.localName}-should-run-input`).checked;
+                    const runTestsMethodExists = testComponent.runTests;
+
+                    if (shouldRun && runTestsMethodExists) {
+                        const numTests = this.querySelector(`#${testComponent.localName}-num-tests-input`).value;
+                        testComponent.runTests((test) => {
+                            this.addTest(testComponent.localName, test);
+                        }, numTests);
+                    }
+                });
             }
         }
 
