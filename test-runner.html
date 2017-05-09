@@ -12,8 +12,8 @@
 
         <template is="dom-repeat" items="[[testComponents]]">
             <div><input id="[[item.localName]]-should-run-input" type="checkbox"> [[item.localName]]: # inputs to generate <input id="[[item.localName]]-num-tests-input" type="number"></div>
-            <template is="dom-repeat" items="[[tests[item.localName]]]">
-                <div>[[item.test]]</div>
+            <template is="dom-repeat" items="[[item.tests]]">
+                <div><input id="[[replaceSpaces(item.description)]]-should-run-input" type="checkbox"> [[item.description]]: # inputs to generate <input id="[[replaceSpaces(item.description)]]-num-tests-input" type="number"></div>
             </template>
         </template>
     </template>
@@ -22,29 +22,35 @@
         class TestRunner {
             beforeRegister() {
                 this.is = 'test-runner';
-                this.tests = {};
+            }
+
+            replaceSpaces(string) {
+                return string.split(' ').join('-');
             }
 
             //TODO figure out the idiomatic way to access the "light DOM" children in Polymer 2 or just plain custom elements once we upgrade this to the V1 specs
             attached() {
-                this.testComponents = this.getContentChildren('#testRunnerContent');
-            }
-
-            addTest(localName, test) {
-                this.tests[localName] = [...(this.tests[localName] || []), test];
+                this.testComponents = this.getContentChildren('#testRunnerContent').map((testComponent) => {
+                    testComponent.prepareTests((description, test) => {
+                        testComponent.tests = [...(testComponent.tests || []), {
+                            localName: testComponent.localName,
+                            description,
+                            test
+                        }];
+                    });
+                    return testComponent;
+                });
             }
 
             runTests() {
                 this.testComponents.forEach((testComponent) => {
-                    const shouldRun = this.querySelector(`#${testComponent.localName}-should-run-input`).checked;
-                    const runTestsMethodExists = testComponent.runTests;
-
-                    if (shouldRun && runTestsMethodExists) {
-                        const numTests = this.querySelector(`#${testComponent.localName}-num-tests-input`).value;
-                        testComponent.runTests((test) => {
-                            this.addTest(testComponent.localName, test);
-                        }, numTests);
-                    }
+                    testComponent.tests.forEach((test) => {
+                        const shouldRun = this.querySelector(`#${this.replaceSpaces(test.description)}-should-run-input`).checked;
+                        if (shouldRun) {
+                            const numTests = this.querySelector(`#${this.replaceSpaces(test.description)}-num-tests-input`).value;
+                            test.test(test.description, numTests);
+                        }
+                    });
                 });
             }
         }
