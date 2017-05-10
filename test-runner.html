@@ -10,7 +10,7 @@
 
             .gridWrapper {
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr 5fr 5fr;
+                grid-template-columns: 1fr 1fr 1fr 10fr 10fr;
                 grid-gap: 10px;
                 grid-auto-rows: minmax(50px, auto);
             }
@@ -28,6 +28,8 @@
             .componentLabelContainer {
                 grid-column: 3 / 5;
                 box-shadow: var(--box-shadow);
+                padding: 10px;
+                cursor: pointer;
             }
 
             .testCheckboxContainer {
@@ -43,6 +45,11 @@
             .testLabelContainer {
                 grid-column: 4 / 5;
                 box-shadow: var(--box-shadow);
+                padding: 10px;
+            }
+
+            .numTestsInputContainer {
+                width: 3vw;
             }
         </style>
 
@@ -60,21 +67,23 @@
                     <input id="[[getShouldRunInputId(item.localName)]]" type="checkbox" on-change="componentShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]">
                 </div>
                 <div class="componentNumTestsInputContainer">
-                    <input id="[[getNumTestsInputId(item.localName)]]" type="number" on-input="componentNumTestsInputOnInput" value="[[item.numTestsValue]]">
+                    <input id="[[getNumTestsInputId(item.localName)]]" type="number" on-input="componentNumTestsInputOnInput" value="[[item.numTestsValue]]" class="numTestsInputContainer">
                 </div>
-                <div class="componentLabelContainer">
+                <div class="componentLabelContainer" on-click="showChildrenClick">
                     <[[item.localName]]>
                 </div>
-                <template is="dom-repeat" items="[[item.tests]]">
-                    <div class="testCheckboxContainer">
-                        <input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]">
-                    </div>
-                    <div class="testNumTestsInputContainer">
-                        <input id="[[getNumTestsInputId(item.description)]]" type="number" on-input="testNumTestsInputOnInput" value="[[item.numTestsValue]]">
-                    </div>
-                    <div class="testLabelContainer">
-                        [[item.description]]
-                    </div>
+                <template is="dom-if" if="[[showChildren]]">
+                    <template is="dom-repeat" items="[[item.tests]]">
+                        <div class="testCheckboxContainer">
+                            <input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]">
+                        </div>
+                        <div class="testNumTestsInputContainer">
+                            <input id="[[getNumTestsInputId(item.description)]]" type="number" on-input="testNumTestsInputOnInput" value="[[item.numTestsValue]]" class="numTestsInputContainer">
+                        </div>
+                        <div class="testLabelContainer">
+                            [[item.description]]
+                        </div>
+                    </template>
                 </template>
             </template>
         </div>
@@ -104,6 +113,10 @@
 
             getNumTestsInputId(string) {
                 return `${this.replaceSpaces(string)}-num-tests-input`;
+            }
+
+            showChildrenClick() {
+                this.showChildren = !this.showChildren;
             }
 
             componentShouldRunInputOnChanged(event) {
