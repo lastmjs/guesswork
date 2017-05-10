@@ -68,7 +68,9 @@
                         const shouldRun = this.querySelector(`#${this.replaceSpaces(test.description)}-should-run-input`).checked;
                         if (shouldRun) {
                             const numTests = this.querySelector(`#${this.replaceSpaces(test.description)}-num-tests-input`).value;
-                            test.test(test.description, numTests);
+                            const tape = require('tape');
+                            delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
+                            test.test(tape, test.description, numTests);
                         }
                     });
                 });
