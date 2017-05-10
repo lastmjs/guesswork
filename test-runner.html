@@ -11,9 +11,9 @@
         <br>
 
         <template is="dom-repeat" items="[[testComponents]]">
-            <div><input id="[[getShouldRunInputId(item.localName)]]" type="checkbox" on-change="componentShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.localName]]: # inputs to generate <input id="[[item.localName]]-num-tests-input" type="number" on-input="componentNumTestsInputOnInput"></div>
+            <div><input id="[[getShouldRunInputId(item.localName)]]" type="checkbox" on-change="componentShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.localName]]: # inputs to generate <input id="[[getNumTestsInputId(item.localName)]]" type="number" on-input="componentNumTestsInputOnInput" value="[[item.numTestsValue]]"></div>
             <template is="dom-repeat" items="[[item.tests]]">
-                <div><input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.description]]: # inputs to generate <input id="[[replaceSpaces(item.description)]]-num-tests-input" type="number" on-input="testNumTestsInputOnInput"></div>
+                <div><input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.description]]: # inputs to generate <input id="[[getNumTestsInputId(item.description)]]" type="number" on-input="testNumTestsInputOnInput" value="[[item.numTestsValue]]"></div>
             </template>
         </template>
     </template>
@@ -24,6 +24,14 @@
                 this.is = 'test-runner';
             }
 
+            getLocalNameFromShouldRunInputId(id) {
+                return id.replace('-should-run-input', '');
+            }
+
+            getLocalNameFromNumTestsInputId(id) {
+                return id.replace('-num-tests-input', '');
+            }
+
             replaceSpaces(string) {
                 return string.split(' ').join('-');
             }
@@ -32,16 +40,20 @@
                 return `${this.replaceSpaces(string)}-should-run-input`;
             }
 
+            getNumTestsInputId(string) {
+                return `${this.replaceSpaces(string)}-num-tests-input`;
+            }
+
             componentShouldRunInputOnChanged(event) {
                 window.localStorage.setItem(event.target.id, event.target.checked);
-
-                const localName = event.target.id.replace('-should-run-input', '');
+                const localName = this.getLocalNameFromShouldRunInputId(event.target.id);
                 const testComponent = this.testComponents.find((testComponent) => {
                     return testComponent.localName === localName;
                 });
                 testComponent.tests.forEach((test) => {
-                    this.querySelector(`#${this.replaceSpaces(test.description)}-should-run-input`).checked = event.target.checked;
-                    this.querySelector(`#${this.replaceSpaces(test.description)}-should-run-input`).dispatchEvent(new Event('change'));
+                    const shouldRunInput = this.querySelector(`#${this.getShouldRunInputId(test.description)}`);
+                    shouldRunInput.checked = event.target.checked;
+                    shouldRunInput.dispatchEvent(new Event('change'));
                 });
             }
 
@@ -51,14 +63,14 @@
 
             componentNumTestsInputOnInput(event) {
                 window.localStorage.setItem(event.target.id, event.target.value);
-
-                const localName = event.target.id.replace('-num-tests-input', '');
+                const localName = this.getLocalNameFromNumTestsInputId(event.target.id);
                 const testComponent = this.testComponents.find((testComponent) => {
                     return testComponent.localName === localName;
                 });
                 testComponent.tests.forEach((test) => {
-                    this.querySelector(`#${this.replaceSpaces(test.description)}-num-tests-input`).value = event.target.value;
-                    this.querySelector(`#${this.replaceSpaces(test.description)}-num-tests-input`).dispatchEvent(new Event('input'));
+                    const numTestsInput = this.querySelector(`#${this.getNumTestsInputId(test.description)}`);
+                    numTestsInput.value = event.target.value;
+                    numTestsInput.dispatchEvent(new Event('input'));
                 });
             }
 
@@ -70,12 +82,14 @@
             attached() {
                 this.testComponents = this.getContentChildren('#testRunnerContent').map((testComponent) => {
                     testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
+                    testComponent.numTestsValue = window.localStorage.getItem(this.getNumTestsInputId(testComponent.localName));
                     testComponent.prepareTests((description, test) => {
                         testComponent.tests = [...(testComponent.tests || []), {
                             localName: testComponent.localName,
                             description,
                             test,
-                            shouldRunValue: window.localStorage.getItem(this.getShouldRunInputId(description)) === 'true' ? true : false
+                            shouldRunValue: window.localStorage.getItem(this.getShouldRunInputId(description)) === 'true' ? true : false,
+                            numTestsValue: window.localStorage.getItem(this.getNumTestsInputId(description))
                         }];
                     });
                     return testComponent;
@@ -85,9 +99,9 @@
             runTests() {
                 this.testComponents.forEach((testComponent) => {
                     testComponent.tests.forEach((test) => {
-                        const shouldRun = this.querySelector(`#${this.replaceSpaces(test.description)}-should-run-input`).checked;
+                        const shouldRun = this.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                         if (shouldRun) {
-                            const numTests = this.querySelector(`#${this.replaceSpaces(test.description)}-num-tests-input`).value;
+                            const numTests = this.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                             const tape = require('tape');
                             delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
                             test.test(tape, test.description, numTests);
