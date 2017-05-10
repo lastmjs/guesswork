@@ -2,6 +2,50 @@
 
 <dom-module id="test-runner">
     <template>
+        <style>
+            /*TODO is host the correct selector here? */
+            :host {
+                --box-shadow: 0px 0px 1px black;
+            }
+
+            .gridWrapper {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 5fr 5fr;
+                grid-gap: 10px;
+                grid-auto-rows: minmax(50px, auto);
+            }
+
+            .componentCheckboxContainer {
+                grid-column: 1;
+                box-shadow: var(--box-shadow);
+            }
+
+            .componentNumTestsInputContainer {
+                grid-column: 2;
+                box-shadow: var(--box-shadow);
+            }
+
+            .componentLabelContainer {
+                grid-column: 3 / 5;
+                box-shadow: var(--box-shadow);
+            }
+
+            .testCheckboxContainer {
+                grid-column: 2;
+                box-shadow: var(--box-shadow);
+            }
+
+            .testNumTestsInputContainer {
+                grid-column: 3;
+                box-shadow: var(--box-shadow);
+            }
+
+            .testLabelContainer {
+                grid-column: 4 / 5;
+                box-shadow: var(--box-shadow);
+            }
+        </style>
+
         <content id="testRunnerContent">
         </content>
 
@@ -10,12 +54,30 @@
         <br>
         <br>
 
-        <template is="dom-repeat" items="[[testComponents]]">
-            <div><input id="[[getShouldRunInputId(item.localName)]]" type="checkbox" on-change="componentShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.localName]]: # inputs to generate <input id="[[getNumTestsInputId(item.localName)]]" type="number" on-input="componentNumTestsInputOnInput" value="[[item.numTestsValue]]"></div>
-            <template is="dom-repeat" items="[[item.tests]]">
-                <div><input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.description]]: # inputs to generate <input id="[[getNumTestsInputId(item.description)]]" type="number" on-input="testNumTestsInputOnInput" value="[[item.numTestsValue]]"></div>
+        <div class="gridWrapper">
+            <template is="dom-repeat" items="[[testComponents]]">
+                <div class="componentCheckboxContainer">
+                    <input id="[[getShouldRunInputId(item.localName)]]" type="checkbox" on-change="componentShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]">
+                </div>
+                <div class="componentNumTestsInputContainer">
+                    <input id="[[getNumTestsInputId(item.localName)]]" type="number" on-input="componentNumTestsInputOnInput" value="[[item.numTestsValue]]">
+                </div>
+                <div class="componentLabelContainer">
+                    <[[item.localName]]>
+                </div>
+                <template is="dom-repeat" items="[[item.tests]]">
+                    <div class="testCheckboxContainer">
+                        <input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]">
+                    </div>
+                    <div class="testNumTestsInputContainer">
+                        <input id="[[getNumTestsInputId(item.description)]]" type="number" on-input="testNumTestsInputOnInput" value="[[item.numTestsValue]]">
+                    </div>
+                    <div class="testLabelContainer">
+                        [[item.description]]
+                    </div>
+                </template>
             </template>
-        </template>
+        </div>
     </template>
 
     <script>
