@@ -13,7 +13,7 @@
         <template is="dom-repeat" items="[[testComponents]]">
             <div><input id="[[getShouldRunInputId(item.localName)]]" type="checkbox" on-change="componentShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.localName]]: # inputs to generate <input id="[[item.localName]]-num-tests-input" type="number" on-input="componentNumTestsInputOnInput"></div>
             <template is="dom-repeat" items="[[item.tests]]">
-                <div><input id="[[replaceSpaces(item.description)]]-should-run-input" type="checkbox" on-change="testShouldRunInputOnChanged" value="[[item.shouldRunValue]]"> [[item.description]]: # inputs to generate <input id="[[replaceSpaces(item.description)]]-num-tests-input" type="number" on-input="testNumTestsInputOnInput"></div>
+                <div><input id="[[getShouldRunInputId(item.description)]]" type="checkbox" on-change="testShouldRunInputOnChanged" checked$="[[item.shouldRunValue]]"> [[item.description]]: # inputs to generate <input id="[[replaceSpaces(item.description)]]-num-tests-input" type="number" on-input="testNumTestsInputOnInput"></div>
             </template>
         </template>
     </template>
@@ -28,8 +28,8 @@
                 return string.split(' ').join('-');
             }
 
-            getShouldRunInputId(localName) {
-                return `${this.replaceSpaces(localName)}-should-run-input`;
+            getShouldRunInputId(string) {
+                return `${this.replaceSpaces(string)}-should-run-input`;
             }
 
             componentShouldRunInputOnChanged(event) {
@@ -74,7 +74,8 @@
                         testComponent.tests = [...(testComponent.tests || []), {
                             localName: testComponent.localName,
                             description,
-                            test
+                            test,
+                            shouldRunValue: window.localStorage.getItem(this.getShouldRunInputId(description)) === 'true' ? true : false
                         }];
                     });
                     return testComponent;
