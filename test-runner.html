@@ -155,20 +155,22 @@
 
             //TODO figure out the idiomatic way to access the "light DOM" children in Polymer 2 or just plain custom elements once we upgrade this to the V1 specs
             attached() {
-                this.testComponents = this.getContentChildren('#testRunnerContent').map((testComponent) => {
-                    testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
-                    testComponent.numTestsValue = window.localStorage.getItem(this.getNumTestsInputId(testComponent.localName));
-                    testComponent.prepareTests((description, test) => {
-                        testComponent.tests = [...(testComponent.tests || []), {
-                            localName: testComponent.localName,
-                            description,
-                            test,
-                            shouldRunValue: window.localStorage.getItem(this.getShouldRunInputId(description)) === 'true' ? true : false,
-                            numTestsValue: window.localStorage.getItem(this.getNumTestsInputId(description))
-                        }];
+                setTimeout(() => { //TODO once we move to Polymer 2 and the custom elements v1 specs, figure out this timing issue. The problem is that in a Polymer 1 component the prepareTests method is not always defined immediately
+                    this.testComponents = this.getContentChildren('#testRunnerContent').map((testComponent) => {
+                        testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
+                        testComponent.numTestsValue = window.localStorage.getItem(this.getNumTestsInputId(testComponent.localName));
+                        testComponent.prepareTests((description, test) => {
+                            testComponent.tests = [...(testComponent.tests || []), {
+                                localName: testComponent.localName,
+                                description,
+                                test,
+                                shouldRunValue: window.localStorage.getItem(this.getShouldRunInputId(description)) === 'true' ? true : false,
+                                numTestsValue: window.localStorage.getItem(this.getNumTestsInputId(description))
+                            }];
+                        });
+                        return testComponent;
                     });
-                    return testComponent;
-                });
+                }, 1000);
             }
 
             runTests() {
