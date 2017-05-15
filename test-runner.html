@@ -170,11 +170,14 @@
                         });
                         return testComponent;
                     });
+                    setTimeout(() => {
+                        this.showChildrenClick();
+                    }, 1000);
                 }, 1000);
             }
 
             async runTests() {
-                // Using for loops as apposed to forEach to allow easy async for each
+                // Using for loops to allow easy async for each
                 for (let i=0; i < this.testComponents.length; i++) {
                     const testComponent = this.testComponents[i];
                     for (let j=0; j < testComponent.tests.length; j++) {
