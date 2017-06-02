@@ -177,6 +177,16 @@
             }
 
             async runTests() {
+                delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
+                const tape = require('tape');
+                const {ipcRenderer} = require('electron');
+
+                tape.onFinish((event) => {
+                    if (this.autoRun) {
+                        ipcRenderer.sendSync('kill-all-processes-successfully');
+                    }
+                });
+
                 // Using for loops to allow easy async for each
                 for (let i=0; i < this.testComponents.length; i++) {
                     const testComponent = this.testComponents[i];
@@ -184,9 +194,8 @@
                         const test = testComponent.tests[j];
                         const shouldRun = this.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                         if (shouldRun) {
-                            const numTests = this.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
-                            const tape = require('tape');
-                            delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
+                            //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
+                            const numTests = this.autoRun ? '100' : this.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                             await test.test(tape, test.description, numTests);
                         }
                     }
