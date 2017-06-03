@@ -192,7 +192,8 @@
                     const testComponent = this.testComponents[i];
                     for (let j=0; j < testComponent.tests.length; j++) {
                         const test = testComponent.tests[j];
-                        const shouldRun = this.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
+                        // autoRun will run all tests
+                        const shouldRun = this.autoRun ? true : this.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                         if (shouldRun) {
                             //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
                             const numTests = this.autoRun ? '100' : this.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
