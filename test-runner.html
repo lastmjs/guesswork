@@ -90,9 +90,14 @@
     </template>
 
     <script>
-        class TestRunner {
-            beforeRegister() {
-                this.is = 'test-runner';
+        class TestRunner extends Polymer.Element {
+            static get is() { return 'test-runner'; }
+            static get properties() {
+                return {
+                    autoRun: {
+                        type: Boolean
+                    }
+                };
             }
 
             getLocalNameFromShouldRunInputId(id) {
@@ -154,7 +159,9 @@
             }
 
             //TODO figure out the idiomatic way to access the "light DOM" children in Polymer 2 or just plain custom elements once we upgrade this to the V1 specs
-            attached() {
+            connectedCallback() {
+                super.connectedCallback();
+
                 setTimeout(() => { //TODO once we move to Polymer 2 and the custom elements v1 specs, figure out this timing issue. The problem is that in a Polymer 1 component the prepareTests method is not always defined immediately
                     this.testComponents = this.getContentChildren('#testRunnerContent').map((testComponent) => {
                         testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
@@ -204,6 +211,6 @@
             }
         }
 
-        Polymer(TestRunner);
+        window.customElements.define(TestRunner.is, TestRunner);
     </script>
 </dom-module>

@@ -16,6 +16,7 @@
   },
   "homepage": "https://github.com/lastmjs/guesswork#readme",
   "dependencies": {
+    "@polymer/polymer": "^2.0.1",
     "tape": "^4.6.3"
   }
 }
