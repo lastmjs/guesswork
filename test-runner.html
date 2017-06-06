@@ -53,9 +53,6 @@
             }
         </style>
 
-        <content id="testRunnerContent">
-        </content>
-
         <button on-click="runTests">Run tests</button>
 
         <br>
@@ -131,7 +128,7 @@
                     return testComponent.localName === localName;
                 });
                 testComponent.tests.forEach((test) => {
-                    const shouldRunInput = this.querySelector(`#${this.getShouldRunInputId(test.description)}`);
+                    const shouldRunInput = this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`);
                     shouldRunInput.checked = event.target.checked;
                     shouldRunInput.dispatchEvent(new Event('change'));
                 });
@@ -148,7 +145,7 @@
                     return testComponent.localName === localName;
                 });
                 testComponent.tests.forEach((test) => {
-                    const numTestsInput = this.querySelector(`#${this.getNumTestsInputId(test.description)}`);
+                    const numTestsInput = this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`);
                     numTestsInput.value = event.target.value;
                     numTestsInput.dispatchEvent(new Event('input'));
                 });
@@ -163,7 +160,7 @@
                 super.connectedCallback();
 
                 setTimeout(() => { //TODO once we move to Polymer 2 and the custom elements v1 specs, figure out this timing issue. The problem is that in a Polymer 1 component the prepareTests method is not always defined immediately
-                    this.testComponents = this.getContentChildren('#testRunnerContent').map((testComponent) => {
+                    this.testComponents = Array.from(this.children).map((testComponent) => {
                         testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
                         testComponent.numTestsValue = window.localStorage.getItem(this.getNumTestsInputId(testComponent.localName));
                         testComponent.prepareTests((description, test) => {
@@ -200,10 +197,10 @@
                     for (let j=0; j < testComponent.tests.length; j++) {
                         const test = testComponent.tests[j];
                         // autoRun will run all tests
-                        const shouldRun = this.autoRun ? true : this.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
+                        const shouldRun = this.autoRun ? true : this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                         if (shouldRun) {
                             //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
-                            const numTests = this.autoRun ? '100' : this.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
+                            const numTests = this.autoRun ? '100' : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                             await test.test(tape, test.description, numTests);
                         }
                     }
