@@ -1,6 +1,6 @@
 [![npm version](https://img.shields.io/npm/v/guesswork.svg?style=flat)](https://www.npmjs.com/package/guesswork) [![dependency Status](https://david-dm.org/lastmjs/guesswork/status.svg)](https://david-dm.org/lastmjs/guesswork) [![devDependency Status](https://david-dm.org/lastmjs/guesswork/dev-status.svg)](https://david-dm.org/lastmjs/guesswork?type=dev)
 
-# guesswork
+# Guesswork
 
 Web component property-based test runner. Combine the declarative power of web components with the generative power of property-based tests. Can be run from a terminal or the GUI. The GUI allows for simple and fast development with fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
 
@@ -12,7 +12,7 @@ npm install guesswork
 
 # Use
 
-guesswork uses [Scram.js](https://github.com/scramjs/scram-engine) to run your tests. Visit the Scram.js [project page](https://github.com/scramjs/scram-engine) if you need more help than you can find here.
+Guesswork uses [Scram.js](https://github.com/scramjs/scram-engine) to run your tests. Visit the Scram.js [project page](https://github.com/scramjs/scram-engine) if you need more help than you can find here.
 
 Run headless tests from the terminal:
 
