@@ -6,7 +6,7 @@ Web component property-based test runner. Combine the declarative power of web c
 
 # Installation
 
-```
+```bash
 npm install guesswork
 ```
 
@@ -16,7 +16,7 @@ Guesswork uses [Scram.js](https://github.com/scramjs/scram-engine) to run your t
 
 Run headless tests from the terminal:
 
-```
+```bash
 node_modules/.bin/electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run
 ```
 
@@ -33,7 +33,7 @@ Run headless tests from an npm script:
 
 Run the test GUI from the terminal:
 
-```
+```bash
 node_modules/.bin/electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --test-window
 ```
 
