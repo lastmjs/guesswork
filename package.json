@@ -1,6 +1,6 @@
 {
   "name": "guesswork",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Web component property-based test runner.",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,7 +16,7 @@
   },
   "homepage": "https://github.com/lastmjs/guesswork#readme",
   "dependencies": {
-    "@polymer/polymer": "^2.0.1",
+    "@npm-polymer/npm-polymer": "0.0.4",
     "tape": "^4.6.3"
   }
 }
