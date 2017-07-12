@@ -1,5 +1,6 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 
+
 <dom-module id="test-runner">
     <template>
         <style>
@@ -92,7 +93,8 @@
             static get properties() {
                 return {
                     autoRun: {
-                        type: Boolean
+                        type: Boolean,
+                        observer: 'runTests'
                     }
                 };
             }
@@ -163,11 +165,12 @@
                     this.testComponents = Array.from(this.children).map((testComponent) => {
                         testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
                         testComponent.numTestsValue = window.localStorage.getItem(this.getNumTestsInputId(testComponent.localName));
-                        testComponent.prepareTests((description, test) => {
+                        testComponent.prepareTests((description, jsverifyCallbackParams, jsverifyCallback) => {
                             testComponent.tests = [...(testComponent.tests || []), {
                                 localName: testComponent.localName,
                                 description,
-                                test,
+                                jsverifyCallbackParams,
+                                jsverifyCallback,
                                 shouldRunValue: window.localStorage.getItem(this.getShouldRunInputId(description)) === 'true' ? true : false,
                                 numTestsValue: window.localStorage.getItem(this.getNumTestsInputId(description))
                             }];
@@ -184,6 +187,7 @@
                 delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
                 const tape = require('tape');
                 const {ipcRenderer} = require('electron');
+                const jsc = require('jsverify');
 
                 tape.onFinish((event) => {
                     if (this.autoRun) {
@@ -201,7 +205,19 @@
                         if (shouldRun) {
                             //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
                             const numTests = this.autoRun ? '100' : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
-                            await test.test(tape, test.description, numTests);
+                            //TODO deal with async issues, make sure each test waits appropriately
+                            tape(test.description, (assert) => {
+                                const result = jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
+                                    tests: numTests
+                                });
+
+                                if (result !== true) {
+                                    ipcRenderer.sendSync('kill-all-processes-unsuccessfully'); //TODO remove this once tape has an on failure handler
+                                }
+
+                                assert.equal(result, true);
+                                assert.end();
+                            });
                         }
                     }
                 }
