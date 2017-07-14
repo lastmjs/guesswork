@@ -208,7 +208,8 @@
                             //TODO deal with async issues, make sure each test waits appropriately
                             tape(test.description, (assert) => {
                                 const result = jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
-                                    tests: numTests
+                                    tests: numTests,
+                                    size: 1000000
                                 });
 
                                 if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
