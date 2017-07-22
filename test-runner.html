@@ -160,6 +160,7 @@
             //TODO figure out the idiomatic way to access the "light DOM" children in Polymer 2 or just plain custom elements once we upgrade this to the V1 specs
             connectedCallback() {
                 //TODO I don't know if this is the best way to do this, but I'm using the event loop to wait until the children to initialize
+                //TODO Perhaps using Shadow DOM slots correctly could help with this
                 if (Array.from(this.children).length > 0 && !Array.from(this.children)[0].prepareTests) {
                     setTimeout(() => {
                         this.connectedCallback();
