@@ -17,6 +17,7 @@
   "homepage": "https://github.com/lastmjs/guesswork#readme",
   "dependencies": {
     "jsverify": "^0.8.2",
+    "lit-html": "^0.4.0",
     "tape": "^4.7.0"
   }
 }

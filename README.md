@@ -8,7 +8,6 @@ Web component property-based test runner. Combine the declarative power of web c
 
 ```bash
 npm install guesswork
-bower install --save polymer
 ```
 
 # Use
