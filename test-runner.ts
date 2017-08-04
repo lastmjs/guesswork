@@ -1,5 +1,5 @@
-import {html} from '../lit-html/lib/lit-html';
-import {render} from '../lit-html/lib/labs/lit-extended';
+import {html} from '../lit-html/lit-html';
+import {render} from '../lit-html/lib/lit-extended';
 
 class TestRunner extends HTMLElement {
     _autoRun: boolean;
