@@ -1,9 +1,18 @@
 import {html} from '../lit-html/lit-html';
 import {render} from '../lit-html/lib/lit-extended';
 
+interface TestComponent extends Element {
+    shouldRunValue: boolean;
+    numTestsValue: number;
+    prepareTests;
+    tests: Test[];
+}
+
 class TestRunner extends HTMLElement {
     _autoRun: boolean;
     render: any;
+    showChildren: boolean;
+    testComponents: TestComponent[];
 
     constructor() {
         super();
@@ -36,23 +45,23 @@ class TestRunner extends HTMLElement {
         return this._autoRun;
     }
 
-    getLocalNameFromShouldRunInputId(id) {
+    getLocalNameFromShouldRunInputId(id: string) {
         return id.replace('-should-run-input', '');
     }
 
-    getLocalNameFromNumTestsInputId(id) {
+    getLocalNameFromNumTestsInputId(id: string) {
         return id.replace('-num-tests-input', '');
     }
 
-    replaceSpaces(string) {
+    replaceSpaces(string: string) {
         return string.split(' ').join('-');
     }
 
-    getShouldRunInputId(string) {
+    getShouldRunInputId(string: string) {
         return `${this.replaceSpaces(string)}-should-run-input`;
     }
 
-    getNumTestsInputId(string) {
+    getNumTestsInputId(string: string) {
         return `${this.replaceSpaces(string)}-num-tests-input`;
     }
 
@@ -62,82 +71,106 @@ class TestRunner extends HTMLElement {
         this.stateChange();
     }
 
-    componentShouldRunInputOnChanged(event) {
-        window.localStorage.setItem(event.target.id, event.target.checked);
-        const localName = this.getLocalNameFromShouldRunInputId(event.target.id);
+    componentShouldRunInputOnChanged(event: Event) {
+        const input: HTMLInputElement = <HTMLInputElement> event.target;
+
+        window.localStorage.setItem(input.id, input.checked.toString());
+        const localName = this.getLocalNameFromShouldRunInputId(input.id);
         const testComponent = this.testComponents.find((testComponent) => {
             return testComponent.localName === localName;
         });
 
-        testComponent.shouldRunValue = event.target.checked;
+        if (!testComponent) {
+            throw 'testComponent was not found, but should have been found';
+        }
+
+        testComponent.shouldRunValue = input.checked;
         this.stateChange();
 
         testComponent.tests.forEach((test) => {
-            const shouldRunInput = this.querySelector(`#${this.getShouldRunInputId(test.description)}`);
-            shouldRunInput.checked = event.target.checked;
+            const shouldRunInput: HTMLInputElement = <HTMLInputElement> this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`);
+            shouldRunInput.checked = input.checked;
             shouldRunInput.dispatchEvent(new Event('change'));
-            test.shouldRunValue = event.target.checked;
+            test.shouldRunValue = input.checked;
             this.stateChange();
         });
     }
 
-    testShouldRunInputOnChanged(event) {
-        window.localStorage.setItem(event.target.id, event.target.checked);
+    testShouldRunInputOnChanged(event: Event) {
+        const input: HTMLInputElement = <HTMLInputElement> event.target;
+
+        window.localStorage.setItem(input.id, input.checked.toString());
 
         const testComponent = this.testComponents.find((testComponent) => {
             return testComponent.tests.find((test) => {
-                return test.shouldRunInputId === event.target.id;
+                return test.shouldRunInputId === input.id;
             });
         });
+
+        if (!testComponent) {
+            throw 'testComponent was not found, but should have been found';
+        }
+
         const test = testComponent.tests.find((test) => {
-            return test.shouldRunInputId === event.target.id;
+            return test.shouldRunInputId === input.id;
         });
 
-        test.shouldRunValue = event.target.checked;
+        test.shouldRunValue = input.checked;
         this.stateChange();
     }
 
-    componentNumTestsInputOnInput(event) {
-        window.localStorage.setItem(event.target.id, event.target.value);
-        const localName = this.getLocalNameFromNumTestsInputId(event.target.id);
+    componentNumTestsInputOnInput(event: Event) {
+        const input: HTMLInputElement = <HTMLInputElement> event.target;
+
+        window.localStorage.setItem(input.id, input.value);
+        const localName = this.getLocalNameFromNumTestsInputId(input.id);
         const testComponent = this.testComponents.find((testComponent) => {
             return testComponent.tests.find((test) => {
                 return test.localName === localName;
             });
         });
 
-        testComponent.numTestsValue = event.target.value;
+        if (!testComponent) {
+            throw 'testComponent was not found, but should have been found';
+        }
+
+        testComponent.numTestsValue = +input.value;
         this.stateChange();
 
         testComponent.tests.forEach((test) => {
-            const numTestsInput = this.querySelector(`#${this.getNumTestsInputId(test.description)}`);
-            numTestsInput.value = event.target.value;
+            const numTestsInput: HTMLInputElement = <HTMLInputElement> this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`);
+            numTestsInput.value = input.value;
             numTestsInput.dispatchEvent(new Event('input'));
-            test.numTestsValue = event.target.value;
+            test.numTestsValue = input.value;
             this.stateChange();
         });
     }
 
-    testNumTestsInputOnInput(event) {
-        window.localStorage.setItem(event.target.id, event.target.value);
+    testNumTestsInputOnInput(event: Event) {
+        const input: HTMLInputElement = <HTMLInputElement> event.target;
+
+        window.localStorage.setItem(input.id, input.value);
 
         const testComponent = this.testComponents.find((testComponent) => {
             return testComponent.tests.find((test) => {
-                return test.numTestsInputId === event.target.id;
+                return test.numTestsInputId === input.id;
             });
         });
+
+        if (!testComponent) {
+            throw 'testComponent was not found, but should have been found';
+        }
+
         const test = testComponent.tests.find((test) => {
-            return test.numTestsInputId === event.target.id;
+            return test.numTestsInputId === input.id;
         });
 
-        test.numTestsValue = event.target.value;
+        test.numTestsValue = input.value;
         this.stateChange();
     }
 
-    //TODO figure out the idiomatic way to access the "light DOM" children in Polymer 2 or just plain custom elements once we upgrade this to the V1 specs
     connectedCallback() {
         //TODO I don't know if this is the best way to do this, but I'm using the event loop to wait until the children to initialize
-        //TODO Perhaps using Shadow DOM slots correctly could help with this
         if (Array.from(this.children).length > 0 && !Array.from(this.children)[0].prepareTests) {
             setTimeout(() => {
                 this.connectedCallback();
@@ -145,6 +178,9 @@ class TestRunner extends HTMLElement {
             return;
         }
 
+        this.attachShadow({mode: 'open'});
+
+        //TODO we might want to grab the children from the slot instead of just all of the children of the component
         this.testComponents = Array.from(this.children).map((testComponent) => {
             testComponent.shouldRunValue = window.localStorage.getItem(this.getShouldRunInputId(testComponent.localName)) === 'true' ? true : false;
             testComponent.numTestsValue = window.localStorage.getItem(this.getNumTestsInputId(testComponent.localName));
@@ -186,10 +222,10 @@ class TestRunner extends HTMLElement {
             for (let j=0; j < testComponent.tests.length; j++) {
                 const test = testComponent.tests[j];
                 // autoRun will run all tests
-                const shouldRun = this.autoRun ? true : this.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
+                const shouldRun = this.autoRun ? true : this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                 if (shouldRun) {
                     //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
-                    const numTests = this.autoRun ? '100' : this.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
+                    const numTests = this.autoRun ? '100' : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                     //TODO deal with async issues, make sure each test waits appropriately
                     tape(test.description, (assert) => {
                         const result = jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
@@ -211,6 +247,8 @@ class TestRunner extends HTMLElement {
 
     stateChange() {
         render(html`
+            <slot></slot>
+
             <style>
                 /*TODO This isn't working with lit-html, and is host the correct selector here? Once it's fixed, use this variable for all of the box-shadows */
                 :host {
@@ -271,10 +309,10 @@ class TestRunner extends HTMLElement {
                 ${this.testComponents.map((testComponent) => {
                     return html`
                         <div class="componentCheckboxContainer">
-                            <input id="${this.getShouldRunInputId(testComponent.localName)}" type="checkbox" onchange="${() => this.componentShouldRunInputOnChanged.bind(this)}" checked="${testComponent.shouldRunValue}">
+                            <input id="${this.getShouldRunInputId(testComponent.localName || 'localNameWasNotDefined')}" type="checkbox" onchange="${() => this.componentShouldRunInputOnChanged.bind(this)}" checked="${testComponent.shouldRunValue}">
                         </div>
                         <div class="componentNumTestsInputContainer">
-                            <input id="${this.getNumTestsInputId(testComponent.localName)}" type="number" oninput="${() => this.componentNumTestsInputOnInput.bind(this)}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
+                            <input id="${this.getNumTestsInputId(testComponent.localName || 'localNameWasNotDefined')}" type="number" oninput="${() => this.componentNumTestsInputOnInput.bind(this)}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
                         </div>
                         <div class="componentLabelContainer" onclick="${() => this.showChildrenClick.bind(this)}">
                             <${testComponent.localName}>
@@ -300,7 +338,7 @@ class TestRunner extends HTMLElement {
                     `;
                 })}
             </div>
-        `, this);
+        `, this.shadowRoot);
     }
 }
 
