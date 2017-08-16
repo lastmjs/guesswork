@@ -227,11 +227,13 @@ class TestRunner extends HTMLElement {
                     //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
                     const numTests = this.autoRun ? '100' : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                     //TODO deal with async issues, make sure each test waits appropriately
-                    tape(test.description, (assert) => {
-                        const result = jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
+                    await tape(test.description, async (assert) => {
+                        const result = await jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
                             tests: numTests,
                             size: 1000000
                         });
+
+                        console.log(result);
 
                         if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
                             ipcRenderer.sendSync('kill-all-processes-unsuccessfully'); //TODO remove this once tape has an on failure handler
