@@ -233,8 +233,6 @@ class TestRunner extends HTMLElement {
                             size: 1000000
                         });
 
-                        console.log(result);
-
                         if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
                             ipcRenderer.sendSync('kill-all-processes-unsuccessfully'); //TODO remove this once tape has an on failure handler
                         }
