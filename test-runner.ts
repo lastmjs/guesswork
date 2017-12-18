@@ -10,6 +10,7 @@ interface TestComponent extends Element {
 
 class TestRunner extends HTMLElement {
     _autoRun: boolean;
+    numTests: number;
     render: any;
     showChildren: boolean;
     testComponents: TestComponent[];
@@ -18,6 +19,7 @@ class TestRunner extends HTMLElement {
         super();
 
         this._autoRun = false;
+        this.numTests = 100;
         this.render = null;
     }
 
@@ -225,7 +227,7 @@ class TestRunner extends HTMLElement {
                 const shouldRun = this.autoRun ? true : this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                 if (shouldRun) {
                     //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
-                    const numTests = this.autoRun ? '100' : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
+                    const numTests = this.autoRun ? this.numTests : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                     //TODO deal with async issues, make sure each test waits appropriately
                     await tape(test.description, async (assert) => {
                         const result = await jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
