@@ -310,10 +310,10 @@ class TestRunner extends HTMLElement {
                 ${this.testComponents.map((testComponent) => {
                     return html`
                         <div class="componentCheckboxContainer">
-                            <input id="${this.getShouldRunInputId(testComponent.localName || 'localNameWasNotDefined')}" type="checkbox" onchange="${() => this.componentShouldRunInputOnChanged}" checked="${testComponent.shouldRunValue}">
+                            <input id="${this.getShouldRunInputId(testComponent.localName || 'localNameWasNotDefined')}" type="checkbox" onchange="${(e: Event) => this.componentShouldRunInputOnChanged(e)}" checked="${testComponent.shouldRunValue}">
                         </div>
                         <div class="componentNumTestsInputContainer">
-                            <input id="${this.getNumTestsInputId(testComponent.localName || 'localNameWasNotDefined')}" type="number" oninput="${() => this.componentNumTestsInputOnInput}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
+                            <input id="${this.getNumTestsInputId(testComponent.localName || 'localNameWasNotDefined')}" type="number" oninput="${(e: Event) => this.componentNumTestsInputOnInput(e)}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
                         </div>
                         <div class="componentLabelContainer" onclick="${() => this.showChildrenClick()}">
                             <${testComponent.localName}>
@@ -324,10 +324,10 @@ class TestRunner extends HTMLElement {
                                 return testComponent.tests.map((test) => {
                                     return html`
                                         <div class="testCheckboxContainer">
-                                            <input id="${this.getShouldRunInputId(test.description)}" type="checkbox" onchange="${() => this.testShouldRunInputOnChanged}" checked="${test.shouldRunValue}">
+                                            <input id="${this.getShouldRunInputId(test.description)}" type="checkbox" onchange="${(e: Event) => this.testShouldRunInputOnChanged(e)}" checked="${test.shouldRunValue}">
                                         </div>
                                         <div class="testNumTestsInputContainer">
-                                            <input id="${this.getNumTestsInputId(test.description)}" type="number" oninput="${() => this.testNumTestsInputOnInput}" value="${test.numTestsValue}" class="numTestsInputContainer">
+                                            <input id="${this.getNumTestsInputId(test.description)}" type="number" oninput="${(e: Event) => this.testNumTestsInputOnInput(e)}" value="${test.numTestsValue}" class="numTestsInputContainer">
                                         </div>
                                         <div class="testLabelContainer">
                                             ${test.description}
