@@ -310,10 +310,10 @@ class TestRunner extends HTMLElement {
                 ${this.testComponents.map((testComponent) => {
                     return html`
                         <div class="componentCheckboxContainer">
-                            <input id="${this.getShouldRunInputId(testComponent.localName || 'localNameWasNotDefined')}" type="checkbox" onchange="${(e: Event) => this.componentShouldRunInputOnChanged(e)}" checked="${testComponent.shouldRunValue}">
+                            <input id="${this.getShouldRunInputId(testComponent.localName || 'localNameWasNotDefined')}" type="checkbox" onchange="${() => this.componentShouldRunInputOnChanged}" checked="${testComponent.shouldRunValue}">
                         </div>
                         <div class="componentNumTestsInputContainer">
-                            <input id="${this.getNumTestsInputId(testComponent.localName || 'localNameWasNotDefined')}" type="number" oninput="${(e: Event) => this.componentNumTestsInputOnInput(e)}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
+                            <input id="${this.getNumTestsInputId(testComponent.localName || 'localNameWasNotDefined')}" type="number" oninput="${() => this.componentNumTestsInputOnInput}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
                         </div>
                         <div class="componentLabelContainer" onclick="${() => this.showChildrenClick()}">
                             <${testComponent.localName}>
