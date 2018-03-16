@@ -1,4 +1,4 @@
-import {html, render} from '../lit-html/lib/lit-extended';
+import {html, render} from '../lit-html/lib/lit-extended.js';
 
 interface TestComponent extends Element {
     shouldRunValue: boolean;
