@@ -1,4 +1,6 @@
 import {html, render} from '../lit-html/lib/lit-extended.js';
+import tape from 'tape';
+import jsverify from 'jsverify';
 
 interface TestComponent extends Element {
     shouldRunValue: boolean;
@@ -206,14 +208,12 @@ class TestRunner extends HTMLElement {
     }
 
     async runTests() {
-        delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
-        const tape = require('tape');
-        const {ipcRenderer} = require('electron');
-        const jsc = require('jsverify');
+        // delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
+        // const {ipcRenderer} = require('electron');
 
         tape.onFinish((event) => {
             if (this.autoRun) {
-                ipcRenderer.sendSync('kill-all-processes-successfully');
+                // ipcRenderer.sendSync('kill-all-processes-successfully');
             }
         });
 
@@ -229,13 +229,13 @@ class TestRunner extends HTMLElement {
                     const numTests = this.autoRun ? this.numTests : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
                     //TODO deal with async issues, make sure each test waits appropriately
                     await tape(test.description, async (assert) => {
-                        const result = await jsc.check(jsc.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
+                        const result = await jsverify.check(jsverify.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
                             tests: numTests,
                             size: 1000000
                         });
 
                         if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
-                            ipcRenderer.sendSync('kill-all-processes-unsuccessfully'); //TODO remove this once tape has an on failure handler
+                            // ipcRenderer.sendSync('kill-all-processes-unsuccessfully'); //TODO remove this once tape has an on failure handler
                         }
 
                         assert.equal(result, true);
