@@ -5,7 +5,9 @@
   "scripts": {
     "start": "node guesswork.js"
   },
-  "main": "guesswork.js",
+  "bin": {
+    "guesswork": "guesswork.js"
+  },
   "author": "Jordan Last <jordan.michael.last@gmail.com>",
   "license": "MIT",
   "dependencies": {
