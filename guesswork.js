@@ -5,9 +5,13 @@
 //TODO allow the entry file to be anywhere in the arguments
 //TODO Get all browsers to exit when guesswork exits
 //TODO Make sure logging from browsers, both stdout and stderr and anything else works correctly
+//TODO allow for passing in custom arguments for each browser
+//TODO firefox-nightly doesn't ever open, probably because of the -
 
 const child_process = require('child_process');
 const program = require('commander');
+const jsverify = require('jsverify');
+let pastValues = [];
 
 (async () => {
     program
@@ -16,12 +20,12 @@ const program = require('commander');
 
     const fileToOpen = program.args[program.args.length - 1];
     const browsersToOpen = program.args.slice(0, program.args.length - 1);
-    const zwitterionPort = 5000;
 
-    await loadZwitterion(zwitterionPort);
+    for (let i=0; i < browsersToOpen.length; i++) {
+        const zwitterionPort = getArbPort();
+        await loadZwitterion(zwitterionPort);
 
-    browsersToOpen.forEach((browsersToOpen) => {
-        const childProcess = child_process.spawn(browsersToOpen, ['--new-window', `http://localhost:${zwitterionPort}/${fileToOpen}`]);
+        const childProcess = child_process.spawn(browsersToOpen[i], ['--new-window', `http://localhost:${zwitterionPort}/${fileToOpen}`]);
 
         childProcess.stdout.on('data', (data) => {
             console.log(data.toString());
@@ -30,7 +34,7 @@ const program = require('commander');
         childProcess.on('error', (error) => {
             console.log(error);
         });
-    });
+    }
 })();
 
 function loadZwitterion(port) {
@@ -47,4 +51,27 @@ function loadZwitterion(port) {
             }
         });
     });
+}
+
+function getArbPort() {
+    const arbPort = jsverify.bless({
+        generator: () => {
+            return getNewValue();
+        }
+    });
+
+    return jsverify.sampler(arbPort)();
+}
+
+
+function getNewValue() {
+    const potentialValue = jsverify.sampler(jsverify.integer(6000, 10000))();
+
+    if (pastValues.includes(potentialValue)) {
+        return getNewValue();
+    }
+    else {
+        pastValues = [...pastValues, potentialValue];
+        return potentialValue;
+    }
 }
