@@ -1,5 +1,4 @@
 import {html, render} from '../lit-html/lib/lit-extended.js';
-import tape from 'tape';
 import jsverify from 'jsverify';
 
 interface TestComponent extends Element {
@@ -208,15 +207,6 @@ class TestRunner extends HTMLElement {
     }
 
     async runTests() {
-        // delete require.cache[require.resolve('tape')]; //this is necessary so that tape will run tests fresh each time. Apparently it keeps some state around that does not let the tests run multiple times
-        // const {ipcRenderer} = require('electron');
-
-        tape.onFinish((event) => {
-            if (this.autoRun) {
-                // ipcRenderer.sendSync('kill-all-processes-successfully');
-            }
-        });
-
         // Using for loops to allow easy async for each
         for (let i=0; i < this.testComponents.length; i++) {
             const testComponent = this.testComponents[i];
@@ -225,25 +215,23 @@ class TestRunner extends HTMLElement {
                 // autoRun will run all tests
                 const shouldRun = this.autoRun ? true : this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                 if (shouldRun) {
-                    //TODO if you are auto running the tests, just do 100 for now. We will allow the number of tests to be configured on an auto run later
                     const numTests = this.autoRun ? this.numTests : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
-                    //TODO deal with async issues, make sure each test waits appropriately
-                    await tape(test.description, async (assert) => {
-                        const result = await jsverify.check(jsverify.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
-                            tests: numTests,
-                            size: 1000000
-                        });
 
-                        if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
-                            // ipcRenderer.sendSync('kill-all-processes-unsuccessfully'); //TODO remove this once tape has an on failure handler
-                        }
+                    console.log(test.description);
 
-                        assert.equal(result, true);
-                        assert.end();
+                    const result = await jsverify.check(jsverify.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
+                        tests: numTests,
+                        size: 1000000
                     });
+
+                    if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
+                        //TODO send message to kill the process unsuccessfully if running in headless mode
+                    }
                 }
             }
         }
+
+        //TODO send message to kill the process successfullly if running in headless mode
     }
 
     stateChange() {
