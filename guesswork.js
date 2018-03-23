@@ -11,7 +11,7 @@ const program = require('commander');
 
 (async () => {
     program
-        .version('0.6.0')
+        .version('0.7.0')
         .parse(process.argv);
 
     const fileToOpen = program.args[program.args.length - 1];
