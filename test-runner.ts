@@ -1,5 +1,5 @@
 import {html, render} from '../lit-html/lib/lit-extended.js';
-import jsverify from 'jsverify';
+import jsverify from 'jsverify-es-module';
 
 interface TestComponent extends Element {
     shouldRunValue: boolean;
