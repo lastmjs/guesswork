@@ -1,6 +1,6 @@
 {
   "name": "guesswork",
-  "version": "0.7.4",
+  "version": "0.7.5",
   "description": "Web component property-based test runner.",
   "scripts": {
     "start": "node guesswork.js"
