@@ -20,10 +20,12 @@ let pastValues = [];
 
     const fileToOpen = program.args[program.args.length - 1];
     const browsersToOpen = program.args.slice(0, program.args.length - 1);
+    const zwitterionPort = 57632;
 
     for (let i=0; i < browsersToOpen.length; i++) {
-        const zwitterionPort = getArbPort();
-        await loadZwitterion(zwitterionPort);
+        //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
+        // const zwitterionPort = getArbPort();
+        // await loadZwitterion(zwitterionPort);
 
         const childProcess = child_process.spawn(browsersToOpen[i], ['--new-window', `http://localhost:${zwitterionPort}/${fileToOpen}`]);
 
