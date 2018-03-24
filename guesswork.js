@@ -22,6 +22,9 @@ let pastValues = [];
     const browsersToOpen = program.args.slice(0, program.args.length - 1);
     const zwitterionPort = 57632;
 
+    //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
+    await loadZwitterion(zwitterionPort);
+
     for (let i=0; i < browsersToOpen.length; i++) {
         //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
         // const zwitterionPort = getArbPort();
