@@ -1,6 +1,11 @@
 import {html, render} from '../lit-html/lib/lit-extended.js';
 import jsverify from 'jsverify-es-module';
 
+window.__karma__.start = (karma) => {
+    console.log(karma);
+    console.log('it worked');
+};
+
 interface TestComponent extends Element {
     shouldRunValue: boolean;
     numTestsValue: number;

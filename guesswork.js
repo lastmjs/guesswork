@@ -7,76 +7,132 @@
 //TODO Make sure logging from browsers, both stdout and stderr and anything else works correctly
 //TODO allow for passing in custom arguments for each browser
 //TODO firefox-nightly doesn't ever open, probably because of the -
+//TODO allow for automated testing in ci environments...use karma, probably
 
-const child_process = require('child_process');
-const program = require('commander');
-const jsverify = require('jsverify');
-let pastValues = [];
+const path = require('path');
 
-(async () => {
-    program
-        .version('0.7.6')
-        .parse(process.argv);
+const userFileInput = 'test/index.html';
 
-    const fileToOpen = program.args[program.args.length - 1];
-    const browsersToOpen = program.args.slice(0, program.args.length - 1);
-    const zwitterionPort = 57632;
-
-    //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
-    await loadZwitterion(zwitterionPort);
-
-    for (let i=0; i < browsersToOpen.length; i++) {
-        //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
-        // const zwitterionPort = getArbPort();
-        // await loadZwitterion(zwitterionPort);
-
-        const childProcess = child_process.spawn(browsersToOpen[i], ['--new-window', `http://localhost:${zwitterionPort}/${fileToOpen}`]);
-
-        childProcess.stdout.on('data', (data) => {
-            console.log(data.toString());
-        });
-
-        childProcess.on('error', (error) => {
-            console.log(error);
-        });
-    }
-})();
-
-function loadZwitterion(port) {
-    return new Promise((resolve, reject) => {
-        const zwitterionProcess = child_process.fork('node_modules/.bin/zwitterion', ['--port', `${port}`]);
-
-        zwitterionProcess.on('error', (error) => {
-            console.log(error);
-        });
-
-        zwitterionProcess.on('message', (e) => {
-            if (e === 'ZWITTERION_LISTENING') {
-                resolve(zwitterionProcess);
-            }
-        });
+let guessworkPlugin = function(files) {
+    files.unshift({
+        pattern: path.join(__dirname, userFileInput),
+        included: true,
+        served: true,
+        watched: true,
+        // type: 'module'
     });
-}
+};
 
-function getArbPort() {
-    const arbPort = jsverify.bless({
-        generator: () => {
-            return getNewValue();
-        }
-    });
+guessworkPlugin.$inject = ['config.files'];
 
-    return jsverify.sampler(arbPort)();
-}
+let zwitterionMiddleware = (config) => {
+    return (req, res, next) => {
+        console.log('Zwitterion middleware beginning');
+        // return res.end('it works');
+        return next();
+    };
+};
 
+zwitterionMiddleware.$inject = ['config'];
 
-function getNewValue() {
-    const potentialValue = jsverify.sampler(jsverify.integer(6000, 10000))();
+const karma = require('karma');
 
-    if (pastValues.includes(potentialValue)) {
-        return getNewValue();
-    }
-    else {
-        pastValues = [...pastValues, potentialValue];
-        return potentialValue;
-    }
-}
+const karmaServer = new karma.Server({
+    // basePath: '',
+    // urlRoot: 'base',
+    files: [{
+        pattern: 'test/**',
+        included: false,
+        watched: true,
+        served: true
+    }],
+    proxies: {
+        // '/test1.js': 'http://localhost:5000/test.js'
+        // '/': '/base/test'
+    },
+    port: 8000,
+    plugins: [{
+        'framework:guesswork': ['factory', guessworkPlugin],
+        // 'middleware:zwitterion': ['factory', zwitterionMiddleware]
+    }],
+    frameworks: ['guesswork'],
+    // middleware: ['zwitterion']
+}, (exitCode) => {
+    console.log(`Karma has exited with ${exitCode}`);
+    process.exit(exitCode);
+});
+
+karmaServer.start();
+
+// const child_process = require('child_process');
+// const program = require('commander');
+// const jsverify = require('jsverify');
+// let pastValues = [];
+//
+// (async () => {
+//     program
+//         .version('0.7.6')
+//         .parse(process.argv);
+//
+//     const fileToOpen = program.args[program.args.length - 1];
+//     const browsersToOpen = program.args.slice(0, program.args.length - 1);
+//     const zwitterionPort = 57632;
+//
+//     //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
+//     await loadZwitterion(zwitterionPort);
+//
+//     for (let i=0; i < browsersToOpen.length; i++) {
+//         //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
+//         // const zwitterionPort = getArbPort();
+//         // await loadZwitterion(zwitterionPort);
+//
+//         const childProcess = child_process.spawn(browsersToOpen[i], ['--new-window', `http://localhost:${zwitterionPort}/${fileToOpen}`]);
+//
+//         childProcess.stdout.on('data', (data) => {
+//             console.log(data.toString());
+//         });
+//
+//         childProcess.on('error', (error) => {
+//             console.log(error);
+//         });
+//     }
+// })();
+//
+// function loadZwitterion(port) {
+//     return new Promise((resolve, reject) => {
+//         const zwitterionProcess = child_process.fork('node_modules/.bin/zwitterion', ['--port', `${port}`]);
+//
+//         zwitterionProcess.on('error', (error) => {
+//             console.log(error);
+//         });
+//
+//         zwitterionProcess.on('message', (e) => {
+//             if (e === 'ZWITTERION_LISTENING') {
+//                 resolve(zwitterionProcess);
+//             }
+//         });
+//     });
+// }
+//
+// function getArbPort() {
+//     const arbPort = jsverify.bless({
+//         generator: () => {
+//             return getNewValue();
+//         }
+//     });
+//
+//     return jsverify.sampler(arbPort)();
+// }
+//
+//
+// function getNewValue() {
+//     const potentialValue = jsverify.sampler(jsverify.integer(6000, 10000))();
+//
+//     if (pastValues.includes(potentialValue)) {
+//         return getNewValue();
+//     }
+//     else {
+//         pastValues = [...pastValues, potentialValue];
+//         return potentialValue;
+//     }
+// }
