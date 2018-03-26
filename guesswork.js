@@ -39,9 +39,10 @@ const karma = require('karma');
         port: zwitterionPort - 1,
         plugins: [{
             'framework:guesswork': ['factory', guessworkPlugin]
-        }],
+        }, 'karma-chrome-launcher'],
         frameworks: ['guesswork'],
-        singleRun: true
+        singleRun: true,
+        browsers: ['ChromiumHeadless']
     }, (exitCode) => {
         console.log(`Karma has exited with ${exitCode}`);
         process.exit(exitCode);
