@@ -244,10 +244,6 @@ class TestRunner extends HTMLElement {
                         size: 1000000
                     });
 
-                    if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
-                        //TODO send message to kill the process unsuccessfully if running in headless mode
-                    }
-
                     if (window.__karma__) {
                         window.__karma__.result({
                             id: test.description,
@@ -262,7 +258,6 @@ class TestRunner extends HTMLElement {
             }
         }
 
-        //TODO send message to kill the process successfullly if running in headless mode
         if (window.__karma__) {
             window.__karma__.complete();
         }

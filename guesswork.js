@@ -40,7 +40,8 @@ const karma = require('karma');
         plugins: [{
             'framework:guesswork': ['factory', guessworkPlugin]
         }],
-        frameworks: ['guesswork']
+        frameworks: ['guesswork'],
+        singleRun: true
     }, (exitCode) => {
         console.log(`Karma has exited with ${exitCode}`);
         process.exit(exitCode);
