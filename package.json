@@ -3,7 +3,7 @@
   "version": "0.7.6",
   "description": "Web component property-based test runner.",
   "scripts": {
-    "start": "node guesswork.js"
+    "start": "node guesswork.js test/index.html"
   },
   "bin": {
     "guesswork": "guesswork.js"

@@ -1,10 +1,10 @@
 import {html, render} from '../lit-html/lib/lit-extended.js';
 import jsverify from 'jsverify-es-module';
 
-window.__karma__.start = (karma) => {
-    console.log(karma);
-    console.log('it worked');
-};
+if (window.__karma__) {
+    window.__karma__.start = (karma) => {
+    };
+}
 
 interface TestComponent extends Element {
     shouldRunValue: boolean;
@@ -45,6 +45,17 @@ class TestRunner extends HTMLElement {
 
     set autoRun(val) {
         this._autoRun = val;
+
+        const totalNumTests = this.testComponents.reduce((result, testComponent) => {
+            return result + testComponent.tests.length;
+        }, 0);
+
+        if (window.__karma__) {
+            window.__karma__.info({
+                total: totalNumTests
+            });
+        }
+
         this.runTests();
     }
 
@@ -209,6 +220,10 @@ class TestRunner extends HTMLElement {
         this.stateChange();
 
         this.showChildrenClick();
+
+        if (window.__karma__) {
+            this.autoRun = true;
+        }
     }
 
     async runTests() {
@@ -232,11 +247,25 @@ class TestRunner extends HTMLElement {
                     if (result !== true && this.autoRun === true) { //only kill the process if you are set to autoRun, which I assume means the component is being run in a continuous integration environment
                         //TODO send message to kill the process unsuccessfully if running in headless mode
                     }
+
+                    if (window.__karma__) {
+                        window.__karma__.result({
+                            id: test.description,
+                            description: test.description,
+                            suite: [],
+                            log: [result],
+                            success: result === true,
+                            skipped: false
+                        });
+                    }
                 }
             }
         }
 
         //TODO send message to kill the process successfullly if running in headless mode
+        if (window.__karma__) {
+            window.__karma__.complete();
+        }
     }
 
     stateChange() {
