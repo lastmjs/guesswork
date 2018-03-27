@@ -10,15 +10,33 @@
 const path = require('path');
 const child_process = require('child_process');
 const karma = require('karma');
+const program = require('commander');
 
 (async () => {
+    program
+        .version('0.8.4')
+        .option('firefox')
+        .option('chromium')
+        .option('safari')
+        .option('edge')
+        .option('--entry [entry]')
+        .option('--port [port]')
+        .parse(process.argv);
 
-    const zwitterionPort = 5001;
+    const browsers = [
+        ...(program.firefox ? ['FirefoxHeadlessWithFlags'] : []),
+        ...(program.chromium ? ['ChromiumHeadless'] : []),
+        ...(program.safari ? ['Safari'] : []),
+        ...(program.edge ? ['Edge'] : [])
+    ];
+
+    const karmaPort = +program.port || 5000;
+    const zwitterionPort = karmaPort + 1;
+
+    const userEntryFile = program.entry;
 
     //TODO decide if arbitrary ports are better or if one port is better, passed in by the user. One port for all browsers are individual ports for each browser
     await loadZwitterion(zwitterionPort);
-
-    const userFileInput = process.argv[2];
 
     let guessworkPlugin = function(files) {
         //TODO including this file is temporary until this is merged: https://github.com/karma-runner/karma/pull/2834 and then we can remove it completely
@@ -31,7 +49,7 @@ const karma = require('karma');
         });
 
         files.unshift({
-            pattern: path.join(process.cwd(), userFileInput),
+            pattern: path.join(process.cwd(), userEntryFile),
             included: true,
             served: true,
             watched: true,
@@ -45,15 +63,19 @@ const karma = require('karma');
         proxies: {
             '/base/': `http://localhost:${zwitterionPort}/`
         },
-        port: zwitterionPort - 1,
-        plugins: [{
-            'framework:guesswork': ['factory', guessworkPlugin]
-        },
-        'karma-chrome-launcher',
-        'karma-firefox-launcher'],
+        port: karmaPort,
+        plugins: [
+            {
+                'framework:guesswork': ['factory', guessworkPlugin]
+            },
+            'karma-chrome-launcher',
+            'karma-firefox-launcher',
+            'karma-safari-launcher',
+            'karma-edge-launcher'
+        ],
         frameworks: ['guesswork'],
-        singleRun: true,
-        browsers: ['ChromiumHeadless', 'FirefoxHeadlessWithFlags'],
+        singleRun: browsers.length !== 0,
+        browsers,
         customLaunchers: {
             FirefoxHeadlessWithFlags: {
                 base: 'FirefoxHeadless',
@@ -61,15 +83,10 @@ const karma = require('karma');
                     'dom.moduleScripts.enabled': true //TODO Get rid of this flag once Firefox supports modules (should be the next release, Firefox 60)
                 }
             }
+        },
+        client: {
+            clearContext: false
         }
-        // client: {
-        //     runInParent: true,
-        //     // useIframe: false
-        // }
-        // files: [
-        //     'node_modules/@webcomponents/webcomponentsjs/webcomponents-hi.js'
-        // ],
-        // customContextFile: userFileInput
     }, (exitCode) => {
         console.log(`Karma has exited with ${exitCode}`);
         process.exit(exitCode);
@@ -77,6 +94,22 @@ const karma = require('karma');
 
     karmaServer.start();
 })();
+
+function loadZwitterion(port) {
+    return new Promise((resolve, reject) => {
+        const zwitterionProcess = child_process.fork('node_modules/.bin/zwitterion', ['--port', `${port}`]);
+
+        zwitterionProcess.on('error', (error) => {
+            console.log(error);
+        });
+
+        zwitterionProcess.on('message', (e) => {
+            if (e === 'ZWITTERION_LISTENING') {
+                resolve(zwitterionProcess);
+            }
+        });
+    });
+}
 
 // const program = require('commander');
 // const jsverify = require('jsverify');
@@ -111,21 +144,7 @@ const karma = require('karma');
 //     }
 // })();
 //
-function loadZwitterion(port) {
-    return new Promise((resolve, reject) => {
-        const zwitterionProcess = child_process.fork('node_modules/.bin/zwitterion', ['--port', `${port}`]);
 
-        zwitterionProcess.on('error', (error) => {
-            console.log(error);
-        });
-
-        zwitterionProcess.on('message', (e) => {
-            if (e === 'ZWITTERION_LISTENING') {
-                resolve(zwitterionProcess);
-            }
-        });
-    });
-}
 //
 // function getArbPort() {
 //     const arbPort = jsverify.bless({

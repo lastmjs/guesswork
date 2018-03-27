@@ -3,7 +3,7 @@
   "version": "0.8.4",
   "description": "Web component property-based test runner.",
   "scripts": {
-    "test": "node guesswork.js test/index.js"
+    "test": "node guesswork.js chromium firefox --entry test/index.js"
   },
   "bin": {
     "guesswork": "guesswork.js"
@@ -15,8 +15,10 @@
     "jsverify-es-module": "0.0.2",
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
+    "karma-edge-launcher": "^0.4.2",
     "karma-firefox-launcher": "^1.1.0",
+    "karma-safari-launcher": "^1.0.0",
     "lit-html": "^0.9.0",
-    "zwitterion": "^0.22.0"
+    "zwitterion": "^0.22.1"
   }
 }
