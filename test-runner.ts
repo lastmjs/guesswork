@@ -83,6 +83,10 @@ class TestRunner extends HTMLElement {
         return `${this.replaceSpaces(string)}-num-tests-input`;
     }
 
+    getLabelContainerId(string: string) {
+        return `${this.replaceSpaces(string)}-label-container-input`;
+    }
+
     showChildrenClick() {
         this.showChildren = !this.showChildren;
 
@@ -239,10 +243,20 @@ class TestRunner extends HTMLElement {
 
                     console.log(test.description);
 
+                    this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}`).style.backgroundColor = 'white';
+                    await wait(500);
+
                     const result = await jsverify.check(jsverify.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
                         tests: numTests,
                         size: 1000000
                     });
+
+                    if (result === true) {
+                        this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}`).style.backgroundColor = '#6C4';
+                    }
+                    else {
+                        this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}`).style.backgroundColor = '#F99';
+                    }
 
                     if (window.__karma__) {
                         window.__karma__.result({
@@ -346,7 +360,7 @@ class TestRunner extends HTMLElement {
                                         <div class="testNumTestsInputContainer">
                                             <input id="${this.getNumTestsInputId(test.description)}" type="number" oninput="${(e: Event) => this.testNumTestsInputOnInput(e)}" value="${test.numTestsValue}" class="numTestsInputContainer">
                                         </div>
-                                        <div class="testLabelContainer">
+                                        <div id="${this.getLabelContainerId(test.description)}" class="testLabelContainer">
                                             ${test.description}
                                         </div>
                                     `;
@@ -361,3 +375,11 @@ class TestRunner extends HTMLElement {
 }
 
 window.customElements.define('test-runner', TestRunner);
+
+function wait(time: number) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            resolve();
+        }, time);
+    });
+}
