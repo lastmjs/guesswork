@@ -5,8 +5,6 @@ jobs:
         working_directory: ~/guesswork
         docker:
             - image: circleci/node:8.9.4
-        environment:
-              CHROMIUM_BIN: "~/guesswork/chrome-linux/chrome"
         steps:
             - checkout
             - run:
@@ -28,4 +26,4 @@ jobs:
                name: Install Firefox dependencies
                command: sudo apt-get update && sudo apt-get install libgtk-3-dev
             - run: npm install
-            - run: PATH=$PATH:~/guesswork/firefox && npm test
+            - run: PATH=$PATH:~/guesswork/firefox CHROMIUM_BIN=~/guesswork/chrome-linux/chrome && npm test
