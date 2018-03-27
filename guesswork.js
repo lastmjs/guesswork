@@ -26,7 +26,7 @@ const karma = require('karma');
             included: true,
             served: true,
             watched: true,
-            // type: 'module'
+            type: 'module'
         });
     };
 
@@ -43,12 +43,20 @@ const karma = require('karma');
         'karma-chrome-launcher',
         'karma-firefox-launcher'],
         frameworks: ['guesswork'],
+        singleRun: true,
+        browsers: ['ChromiumHeadless', 'FirefoxHeadlessWithFlags'],
+        customLaunchers: {
+            FirefoxHeadlessWithFlags: {
+                base: 'FirefoxHeadless',
+                prefs: {
+                    'dom.moduleScripts.enabled': true //TODO Get rid of this flag once Firefox supports modules (should be the next release, Firefox 60)
+                }
+            }
+        }
         // client: {
         //     runInParent: true,
         //     // useIframe: false
         // }
-        singleRun: true,
-        browsers: ['ChromiumHeadless', 'FirefoxHeadless'],
         // files: [
         //     'node_modules/@webcomponents/webcomponentsjs/webcomponents-hi.js'
         // ],
