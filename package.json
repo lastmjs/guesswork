@@ -1,6 +1,6 @@
 {
   "name": "guesswork",
-  "version": "0.9.1",
+  "version": "0.9.2",
   "description": "Web component property-based test runner.",
   "scripts": {
     "test": "node guesswork.js chromium firefox --entry test/index.js"
