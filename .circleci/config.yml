@@ -20,6 +20,6 @@ jobs:
                 command: sudo apt-get install libgtk-3-dev
             - run:
                 name: Test
-                command: ~/guesswork/firefox/firefox --headless
+                command: firefox --headless
             - run: npm install
             - run: npm test
