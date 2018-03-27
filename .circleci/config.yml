@@ -4,7 +4,7 @@ jobs:
     build:
         working_directory: ~/redux-store-element
         docker:
-            - image: circleci/node:8.9.4-browsers-latest
+            - image: circleci/node:latest-browsers
         environment:
               CHROMIUM_BIN: "/usr/bin/google-chrome"
         steps:
