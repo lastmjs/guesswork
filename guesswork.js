@@ -48,7 +48,7 @@ const karma = require('karma');
         //     // useIframe: false
         // }
         singleRun: true,
-        browsers: ['ChromiumHeadless', 'FirefoxHeadless'],
+        browsers: [/*'ChromiumHeadless', */'FirefoxHeadless'],
         // files: [
         //     'node_modules/@webcomponents/webcomponentsjs/webcomponents-hi.js'
         // ],
