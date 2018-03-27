@@ -12,8 +12,5 @@ jobs:
             - run:
                 name: Set permissions
                 command: sudo chown -R circleci /usr/local/lib/node_modules && sudo chown -R circleci /usr/local/bin
-            # - run:
-                # name: Install browser dependencies
-                # command: sudo apt-get update && sudo apt-get install chromium-browser
             - run: npm install
             - run: npm test

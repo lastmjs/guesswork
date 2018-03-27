@@ -39,10 +39,20 @@ const karma = require('karma');
         port: zwitterionPort - 1,
         plugins: [{
             'framework:guesswork': ['factory', guessworkPlugin]
-        }, 'karma-chrome-launcher'],
+        },
+        'karma-chrome-launcher',
+        'karma-firefox-launcher'],
         frameworks: ['guesswork'],
+        // client: {
+        //     runInParent: true,
+        //     // useIframe: false
+        // }
         singleRun: true,
-        browsers: ['ChromiumHeadless']
+        browsers: ['ChromiumHeadless', 'FirefoxHeadless'],
+        // files: [
+        //     'node_modules/@webcomponents/webcomponentsjs/webcomponents-hi.js'
+        // ],
+        // customContextFile: userFileInput
     }, (exitCode) => {
         console.log(`Karma has exited with ${exitCode}`);
         process.exit(exitCode);
