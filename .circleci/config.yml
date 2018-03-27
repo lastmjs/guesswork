@@ -14,9 +14,9 @@ jobs:
                 command: sudo chown -R circleci /usr/local/lib/node_modules && sudo chown -R circleci /usr/local/bin
             - run:
                 name: Install Firefox 59
-                command: wget https://ftp.mozilla.org/pub/firefox/releases/59.0/linux-x86_64/en-US/firefox-59.0.tar.bz2 && tar -xjf firefox-59.0.tar.bz2 && PATH=$PATH:~/guesswork/firefox
-#            - run:
-#                name: Install Firefox dependencies
-#                command: sudo apt-get install libgtk-3-dev
+                command: wget https://ftp.mozilla.org/pub/firefox/releases/59.0.2/linux-x86_64/en-US/firefox-59.0.2.tar.bz2 && tar -xjf firefox-59.0.2.tar.bz2 && PATH=$PATH:~/guesswork/firefox
+           - run:
+               name: Install Firefox dependencies
+               command: sudo apt-get install libgtk-3-dev
             - run: npm install
             - run: PATH=$PATH:~/guesswork/firefox && npm test
