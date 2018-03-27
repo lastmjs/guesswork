@@ -21,6 +21,15 @@ const karma = require('karma');
     const userFileInput = process.argv[2];
 
     let guessworkPlugin = function(files) {
+        //TODO including this file is temporary until this is merged: https://github.com/karma-runner/karma/pull/2834 and then we can remove it completely
+        files.unshift({
+            pattern: path.join(__dirname, 'temp.js'),
+            included: true,
+            served: true,
+            watched: true,
+            // type: 'module'
+        });
+
         files.unshift({
             pattern: path.join(process.cwd(), userFileInput),
             included: true,
