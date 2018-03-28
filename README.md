@@ -55,7 +55,7 @@ Run the web GUI from an npm script:
 ```
 ## Browsers
 
-Specify which browsers you desire for your headless runs as command line arguments. The following browsers are available:
+Specify which browsers you desire for your headless runs as command line arguments. The following browser command line arguments are available:
 
 * `chromium`
 * `firefox`
