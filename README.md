@@ -19,7 +19,7 @@ Headless runs will automatically execute all of your tests from the `--entry` fi
 Run headless from the terminal:
 
 ```bash
-node_modules/.bin/guesswork chromium firefox safari --entry test/index.js
+node_modules/.bin/guesswork chromium firefox safari electron --entry test/index.js
 ```
 
 Run headless from an npm script:
@@ -28,7 +28,7 @@ Run headless from an npm script:
 // package.json
 {
   "scripts": {
-    "test": "guesswork chromium firefox safari --entry test/index.js"
+    "test": "guesswork chromium firefox safari electron --entry test/index.js"
   }
 }
 ```
@@ -61,10 +61,12 @@ Specify which browsers you desire for your headless runs as command line argumen
 * `firefox`
 * `safari`
 * `edge`
+* `electron`
 
-You must install each of these browsers separately on the machine your tests will be running on. Only truly headless browsers will be run headless (Chromium and Firefox for now). Each browser launch is managed by its associated karma launcher plugin, which is installed along with Guesswork. If you have any questions about hooking up your browser, see the documentation in the appropriate browser launcher repo:
+You must install each of these browsers separately on the machine your tests will be running on. Only truly headless browsers will be run headless (Chromium and Firefox for now). Each browser launch is managed by its associated [Karma browser launcher](http://karma-runner.github.io/2.0/config/browsers.html), which is installed along with Guesswork. If you have any questions about hooking up your browser, see the documentation in the appropriate browser launcher repo:
 
 * `chromium`: [karma-chrome-launcher](https://github.com/karma-runner/karma-chrome-launcher)
 * `firefox`: [karma-firefox-launcher](https://github.com/karma-runner/karma-firefox-launcher)
 * `safari`: [karma-safari-launcher](https://github.com/karma-runner/karma-safari-launcher)
 * `edge`: [karma-edge-launcher](https://github.com/karma-runner/karma-edge-launcher)
+* `electron`: [karma-electron](https://github.com/twolfson/karma-electron)
