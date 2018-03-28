@@ -45,7 +45,7 @@ const program = require('commander');
             'karma-firefox-launcher',
             'karma-safari-launcher',
             'karma-edge-launcher',
-            'karma-electron'
+            ...(program.electron ? ['karma-electron'] : [])
         ],
         files: [{ //TODO including this file is temporary until this is merged: https://github.com/karma-runner/karma/pull/2834 and then we can remove it completely
             pattern: path.join(__dirname, 'temp.js'),
