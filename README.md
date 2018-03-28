@@ -62,4 +62,9 @@ Specify which browsers you desire for your headless runs as command line argumen
 * `safari`
 * `edge`
 
-You must install each of these browsers separately on the machine your tests will be running on. Each browser launch is run by its associated karma launcher plugin. See `package.json` for those dependencies. Only truly headless browsers will be run headless (Chromium and Firefox for now).
+You must install each of these browsers separately on the machine your tests will be running on. Each browser launch is run by its associated karma launcher plugin. Only truly headless browsers will be run headless (Chromium and Firefox for now):
+
+* `chromium`: [karma-chrome-launcher](https://github.com/karma-runner/karma-chrome-launcher)
+* `firefox`: [karma-firefox-launcher](https://github.com/karma-runner/karma-firefox-launcher)
+* `safari`: [karma-safari-launcher](https://github.com/karma-runner/karma-safari-launcher)
+* `edge`: [karma-edge-launcher](https://github.com/karma-runner/karma-edge-launcher)
