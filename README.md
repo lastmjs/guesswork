@@ -2,7 +2,7 @@
 
 # Guesswork
 
-Web component property-based test runner. Combine the declarative power of web components with the generative power of property-based tests. Can be run from a terminal or the GUI. The GUI allows for simple and fast development with fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
+Framework for property-based testing in JavaScript. Uses [Karma](https://github.com/karma-runner/karma) for automating browser runs and output. Uses [JSVerify](https://github.com/jsverify/jsverify) for property-based testing utilities in JavaScript, similar to what [QuickCheck](https://github.com/nick8325/quickcheck) does in Haskell. Can be run from a terminal or the web GUI. The web GUI allows fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
 
 # Installation
 
