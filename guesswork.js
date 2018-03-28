@@ -14,7 +14,7 @@ const program = require('commander');
 
 (async () => {
     program
-        .version('0.9.2')
+        .version('0.9.3')
         .option('firefox')
         .option('chromium')
         .option('safari')
