@@ -12,30 +12,38 @@ npm install guesswork
 
 # Use
 
-Guesswork uses [Scram.js](https://github.com/scramjs/scram-engine) to run your tests. Visit the Scram.js [project page](https://github.com/scramjs/scram-engine) if you need more help than you can find here.
+//TODO explain the file structure and web component structure of creating a test suite
 
-Run headless tests from the terminal:
+## Headless Runs
+
+Headless runs will automatically run all of your tests from the `--entry` file with 100 iterations each.
+
+Run headless from the terminal:
 
 ```bash
-node_modules/.bin/electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run
+node_modules/.bin/guesswork chromium firefox safari --entry test/index.js
 ```
 
-Run headless tests from an npm script:
+Run headless from an npm script:
 
 ```json
 // package.json
 {
   "scripts": {
-    "test": "electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run"
+    "test": "guesswork chromium firefox safari --entry test/index.js"
   }
 }
 ```
 
-Run the test GUI from the terminal:
+## Web GUI Runs
+
+Run the web GUI from the terminal:
 
 ```bash
-node_modules/.bin/electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --test-window
+node_modules/.bin/guesswork chromium firefox safari --entry test/index.js
 ```
+
+Access the 
 
 Run the test GUI from an npm script:
 
@@ -47,9 +55,13 @@ Run the test GUI from an npm script:
   }
 }
 ```
+## Browsers
 
-* Run any Chromium or Node.js code (client or server)
-* Works on the popular continuous integration servers
-* Show how the GUI works
-* Make a video
-* Show how the console works
+Specify which browsers you desire for your headless runs as command line arguments. The following browsers are available:
+
+* `chromium`
+* `firefox`
+* `safari`
+* `edge`
+
+You must install each of these browsers separately on the machine your tests will be running on. Each browser launch is run by its associated karma launcher plugin. See `package.json` for those dependencies. Only truly headless browsers will be run headless (Chromium and Firefox for now).
