@@ -1,10 +1,11 @@
 {
   "name": "guesswork",
-  "version": "0.10.0",
+  "version": "0.10.1",
   "description": "Framework for property-based testing in JavaScript.",
   "scripts": {
     "test": "xvfb-run node guesswork.js chromium firefox electron --entry test/index.js",
-    "test-local": "node guesswork.js chromium firefox electron --entry test/index.js"
+    "test-local": "node guesswork.js chromium firefox electron --entry test/index.js",
+    "test-manual": "node guesswork.js --entry test/index.js"
   },
   "bin": {
     "guesswork": "guesswork.js"
