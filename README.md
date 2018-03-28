@@ -2,7 +2,7 @@
 
 # Guesswork
 
-Web component property-based test runner. Combine the declarative power of web components with the generative power of property-based tests. Can be run from a terminal or the GUI. The GUI allows for simple and fast development with fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
+Framework for property-based testing in JavaScript. Uses [Karma](https://github.com/karma-runner/karma) for automating browser runs and output. Uses [JSVerify](https://github.com/jsverify/jsverify) for property-based testing utilities in JavaScript, similar to what [QuickCheck](https://github.com/nick8325/quickcheck) does in Haskell. Can be run from a terminal or the web GUI. The web GUI allows fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
 
 # Installation
 
@@ -12,44 +12,59 @@ npm install guesswork
 
 # Use
 
-Guesswork uses [Scram.js](https://github.com/scramjs/scram-engine) to run your tests. Visit the Scram.js [project page](https://github.com/scramjs/scram-engine) if you need more help than you can find here.
+## Headless Runs
 
-Run headless tests from the terminal:
+Headless runs will automatically execute all of your tests from the `--entry` file with 100 iterations each.
+
+Run headless from the terminal:
 
 ```bash
-node_modules/.bin/electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run
+node_modules/.bin/guesswork chromium firefox safari --entry test/index.js
 ```
 
-Run headless tests from an npm script:
+Run headless from an npm script:
 
 ```json
 // package.json
 {
   "scripts": {
-    "test": "electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --auto-run"
+    "test": "guesswork chromium firefox safari --entry test/index.js"
   }
 }
 ```
 
-Run the test GUI from the terminal:
+## Web GUI Runs
+
+Web GUI runs will open up a port on `localhost`. You can go to that port in any browser and have fine-grained manual control over which tests to run and how many iterations of random inputs should be generated. To get the port to open, just leave out any browsers from the command line arguments.
+
+Run the web GUI from the terminal:
 
 ```bash
-node_modules/.bin/electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --test-window
+node_modules/.bin/guesswork --entry test/index.js
 ```
 
-Run the test GUI from an npm script:
+Run the web GUI from an npm script:
 
 ```json
 // package.json
 {
   "scripts": {
-    "test-window": "electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --test-window"
+    "test-gui": "guesswork --entry test/index.js"
   }
 }
 ```
+## Browsers
 
-* Run any Chromium or Node.js code (client or server)
-* Works on the popular continuous integration servers
-* Show how the GUI works
-* Make a video
-* Show how the console works
+Specify which browsers you desire for your headless runs as command line arguments. The following browser command line arguments are available:
+
+* `chromium`
+* `firefox`
+* `safari`
+* `edge`
+
+You must install each of these browsers separately on the machine your tests will be running on. Only truly headless browsers will be run headless (Chromium and Firefox for now). Each browser launch is managed by its associated karma launcher plugin, which is installed along with Guesswork. If you have any questions about hooking up your browser, see the documentation in the appropriate browser launcher repo:
+
+* `chromium`: [karma-chrome-launcher](https://github.com/karma-runner/karma-chrome-launcher)
+* `firefox`: [karma-firefox-launcher](https://github.com/karma-runner/karma-firefox-launcher)
+* `safari`: [karma-safari-launcher](https://github.com/karma-runner/karma-safari-launcher)
+* `edge`: [karma-edge-launcher](https://github.com/karma-runner/karma-edge-launcher)
