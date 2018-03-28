@@ -3,7 +3,7 @@
   "version": "0.9.3",
   "description": "Framework for property-based testing in JavaScript.",
   "scripts": {
-    "test": "node guesswork.js chromium firefox --entry test/index.js"
+    "test": "node guesswork.js chromium firefox electron --entry test/index.js"
   },
   "bin": {
     "guesswork": "guesswork.js"
@@ -16,9 +16,13 @@
     "karma": "^2.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-edge-launcher": "^0.4.2",
+    "karma-electron": "^5.3.0",
     "karma-firefox-launcher": "^1.1.0",
     "karma-safari-launcher": "^1.0.0",
     "lit-html": "^0.9.0",
     "zwitterion": "^0.22.2"
+  },
+  "devDependencies": {
+    "electron": "^2.0.0-beta.6"
   }
 }

@@ -19,6 +19,7 @@ const program = require('commander');
         .option('chromium')
         .option('safari')
         .option('edge')
+        .option('electron')
         .option('--entry [entry]')
         .option('--port [port]')
         .parse(process.argv);
@@ -27,7 +28,8 @@ const program = require('commander');
         ...(program.firefox ? ['FirefoxHeadlessWithFlags'] : []),
         ...(program.chromium ? ['ChromiumHeadless'] : []),
         ...(program.safari ? ['Safari'] : []),
-        ...(program.edge ? ['Edge'] : [])
+        ...(program.edge ? ['Edge'] : []),
+        ...(program.electron ? ['ElectronCustom'] : [])
     ];
 
     const karmaPort = +program.port || 5000;
@@ -71,7 +73,8 @@ const program = require('commander');
             'karma-chrome-launcher',
             'karma-firefox-launcher',
             'karma-safari-launcher',
-            'karma-edge-launcher'
+            'karma-edge-launcher',
+            'karma-electron'
         ],
         frameworks: ['guesswork'],
         singleRun: browsers.length !== 0,
@@ -82,6 +85,10 @@ const program = require('commander');
                 prefs: {
                     'dom.moduleScripts.enabled': true //TODO Get rid of this flag once Firefox supports modules (should be the next release, Firefox 60)
                 }
+            },
+            ElectronCustom: {
+                base: 'Electron',
+                // flags: ['show']
             }
         },
         client: {
