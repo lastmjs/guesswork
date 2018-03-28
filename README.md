@@ -49,7 +49,7 @@ Run the web GUI from an npm script:
 // package.json
 {
   "scripts": {
-    "test-window": "guesswork --entry test/index.js"
+    "test-gui": "guesswork --entry test/index.js"
   }
 }
 ```
