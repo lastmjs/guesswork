@@ -62,7 +62,7 @@ Specify which browsers you desire for your headless runs as command line argumen
 * `safari`
 * `edge`
 
-You must install each of these browsers separately on the machine your tests will be running on. Each browser launch is run by its associated karma launcher plugin. Only truly headless browsers will be run headless (Chromium and Firefox for now):
+You must install each of these browsers separately on the machine your tests will be running on. Only truly headless browsers will be run headless (Chromium and Firefox for now). Each browser launch is managed by its associated karma launcher plugin, which are installed along with Guesswork. If you have any questions about hooking up your browser, see the documentation in the appropriate browser launcher repo:
 
 * `chromium`: [karma-chrome-launcher](https://github.com/karma-runner/karma-chrome-launcher)
 * `firefox`: [karma-firefox-launcher](https://github.com/karma-runner/karma-firefox-launcher)
