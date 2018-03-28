@@ -239,7 +239,7 @@ class TestRunner extends HTMLElement {
                 // autoRun will run all tests
                 const shouldRun = this.autoRun ? true : this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
                 if (shouldRun) {
-                    const numTests = this.autoRun ? this.numTests : this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value;
+                    const numTests = this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value || this.numTests;
 
                     console.log(test.description);
 
