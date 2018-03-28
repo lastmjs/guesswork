@@ -12,11 +12,9 @@ npm install guesswork
 
 # Use
 
-//TODO explain the file structure and web component structure of creating a test suite
-
 ## Headless Runs
 
-Headless runs will automatically run all of your tests from the `--entry` file with 100 iterations each.
+Headless runs will automatically execute all of your tests from the `--entry` file with 100 iterations each.
 
 Run headless from the terminal:
 
@@ -37,21 +35,21 @@ Run headless from an npm script:
 
 ## Web GUI Runs
 
+Web GUI runs will open up a port on `localhost`. You can go to that port in any browser and have fine-grained manual control over which tests to run and how many iterations of random inputs should be generated. To get the port to open, just leave out any browsers from the command line arguments.
+
 Run the web GUI from the terminal:
 
 ```bash
-node_modules/.bin/guesswork chromium firefox safari --entry test/index.js
+node_modules/.bin/guesswork --entry test/index.js
 ```
 
-Access the 
-
-Run the test GUI from an npm script:
+Run the web GUI from an npm script:
 
 ```json
 // package.json
 {
   "scripts": {
-    "test-window": "electron --enable-logging node_modules/scram-engine/main.js --entry-file test/index.html --test-window"
+    "test-window": "guesswork --entry test/index.js"
   }
 }
 ```
