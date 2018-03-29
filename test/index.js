@@ -1,18 +1,10 @@
-window.__karma__.start = (karma) => {
+import '../node_modules/@webcomponents/shadydom/shadydom.min.js';
+import '../node_modules/@webcomponents/custom-elements/custom-elements.min.js';
+import './test-suite-1.js';
+import '../test-runner.ts';
 
-};
-
-window.__karma__.info({
-    total: 1
-});
-
-window.__karma__.result({
-    id: '',
-    description: 'guesswork test 1',
-    suite: [],
-    log: [],
-    success: true,
-    skipped: false
-});
-
-window.__karma__.complete();
+window.document.body.innerHTML = `
+    <test-runner>
+        <test-suite-1></test-suite-1>
+    </test-runner>
+`;

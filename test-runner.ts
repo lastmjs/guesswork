@@ -1,4 +1,4 @@
-import {html, render} from '../lit-html/lib/lit-extended.js';
+import {html, render} from 'lit-html/lib/lit-extended.js';
 import jsverify from 'jsverify-es-module';
 
 if (window.__karma__) {
