@@ -60,27 +60,39 @@ The entry point to your tests should be a JavaScript file. When you instruct the
 
 ```javascript
 // test/index.js
-import './test-suite1.js';
-import './test-suite2.ts';
-import './test-suite3.jsx';
-import './test-suite4.tsx';
+
+import './test-suite-1.js';
+import './test-suite-2.ts';
+import './test-suite-3.jsx';
+import './test-suite-4.tsx';
 import '../node_modules/guesswork/test-runner.ts';
 
 window.document.body.innerHTML = `
     <test-runner>
-        <test-suite1></test-suite1>
-        <test-suite2></test-suite2>
-        <test-suite3></test-suite3>
-        <test-suite4></test-suite4>
+        <test-suite-1></test-suite-1>
+        <test-suite-2></test-suite-2>
+        <test-suite-3></test-suite-3>
+        <test-suite-4></test-suite-4>
     </test-runner>
 `;
 ```
 
 ## Test Suites
 
-Each test suite is created as an HTML [custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements). You must define a `prepareTests` method on the class of your custom element. That function has one parameter, which is the Guesswork test preparation function. This function can be used to create an individual test case. Here is an example test suite:
+Each test suite is created as an HTML [custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements). You must define a `prepareTests` method on the class of your custom element. That function has one parameter, which is the Guesswork test preparation function. This function is used to create individual test cases. Here is an example test suite:
 
 ```javascript
+// test/test-suite-1.js
+
+import jsverify from 'jsverify-es-module';
+
+class TestSuite1 extends HTMLElement {
+  prepareTests(test) {
+    
+  }
+}
+
+window.customElements.define('test-suite-1', TestSuite1);
 ```
 
 ## Browsers
