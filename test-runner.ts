@@ -75,6 +75,10 @@ class TestRunner extends HTMLElement {
         return `${this.replaceSpaces(string)}-label-container-input`;
     }
 
+    getComponentLabelContainerId(string: string) {
+        return `${this.replaceSpaces(string)}-component-label-container`;
+    }
+
     showChildrenClick() {
         this.showChildren = !this.showChildren;
 
@@ -233,6 +237,7 @@ class TestRunner extends HTMLElement {
         // Using for loops to allow easy async for each
         for (let i=0; i < this.testComponents.length; i++) {
             const testComponent = this.testComponents[i];
+            let allTestPassed = true;
             for (let j=0; j < testComponent.tests.length; j++) {
                 const test = testComponent.tests[j];
                 // autoRun will run all tests
@@ -243,18 +248,26 @@ class TestRunner extends HTMLElement {
                     console.log(test.description);
 
                     this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}`).style.backgroundColor = 'white';
-                    await wait(500);
 
-                    const result = await jsverify.check(jsverify.forall(...test.jsverifyCallbackParams, test.jsverifyCallback), {
+                    let testNumber = 0;
+                    const result = await jsverify.check(jsverify.forall(...test.jsverifyCallbackParams, async (...args) => {
+                        const correct = await test.jsverifyCallback(...args);
+
+                        if (correct) {
+                            testNumber = testNumber + 1;
+                            this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}-success-meter`).style = `flex: ${testNumber}; background-color: #6C4`;
+                            this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}-unfinished-meter`).style = `flex: ${numTests - testNumber}; background-color: white`;
+                        }
+
+                        await wait(0);
+                        return correct;
+                    }), {
                         tests: numTests,
                         size: 1000000
                     });
 
-                    if (result === true) {
-                        this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}`).style.backgroundColor = '#6C4';
-                    }
-                    else {
-                        this.shadowRoot.querySelector(`#${this.getLabelContainerId(test.description)}`).style.backgroundColor = '#F99';
+                    if (result !== true) {
+                        allTestPassed = false;
                     }
 
                     if (window.__karma__) {
@@ -268,6 +281,13 @@ class TestRunner extends HTMLElement {
                         });
                     }
                 }
+            }
+
+            if (allTestPassed) {
+                this.shadowRoot.querySelector(`#${this.getComponentLabelContainerId(testComponent.localName)}`).style = `background-color: #6C4`;
+            }
+            else {
+                this.shadowRoot.querySelector(`#${this.getComponentLabelContainerId(testComponent.localName)}`).style = `background-color: #F99`;
             }
         }
 
@@ -309,7 +329,6 @@ class TestRunner extends HTMLElement {
                     grid-column: 3 / 5;
                     box-shadow: 0px 0px 1px black;
                     padding: 10px;
-                    cursor: pointer;
                 }
 
                 .testCheckboxContainer {
@@ -325,7 +344,8 @@ class TestRunner extends HTMLElement {
                 .testLabelContainer {
                     grid-column: 4 / 5;
                     box-shadow: 0px 0px 1px black;
-                    padding: 10px;
+                    display: flex;
+                    position: relative;
                 }
 
                 .numTestsInputContainer {
@@ -347,7 +367,7 @@ class TestRunner extends HTMLElement {
                         <div class="componentNumTestsInputContainer">
                             <input id="${this.getNumTestsInputId(testComponent.localName || 'localNameWasNotDefined')}" type="number" oninput="${(e: Event) => this.componentNumTestsInputOnInput(e)}" value="${testComponent.numTestsValue}" class="numTestsInputContainer">
                         </div>
-                        <div class="componentLabelContainer" onclick="${() => this.showChildrenClick()}">
+                        <div id="${this.getComponentLabelContainerId(testComponent.localName || 'localNameWasNotDefined')}" class="componentLabelContainer">
                             <${testComponent.localName}>
                         </div>
 
@@ -362,7 +382,9 @@ class TestRunner extends HTMLElement {
                                             <input id="${this.getNumTestsInputId(test.description)}" type="number" oninput="${(e: Event) => this.testNumTestsInputOnInput(e)}" value="${test.numTestsValue}" class="numTestsInputContainer">
                                         </div>
                                         <div id="${this.getLabelContainerId(test.description)}" class="testLabelContainer">
-                                            ${test.description}
+                                            <div style="position: absolute; top: 25%; left: 2%">${test.description}</div>
+                                            <div id="${this.getLabelContainerId(test.description)}-success-meter"></div>
+                                            <div id="${this.getLabelContainerId(test.description)}-unfinished-meter"></div>
                                         </div>
                                     `;
                                 });
