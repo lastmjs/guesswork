@@ -238,6 +238,7 @@ class TestRunner extends HTMLElement {
         for (let i=0; i < this.testComponents.length; i++) {
             const testComponent = this.testComponents[i];
             let allTestPassed = true;
+            this.shadowRoot.querySelector(`#${this.getComponentLabelContainerId(testComponent.localName)}`).style = `background-color: white`;
             for (let j=0; j < testComponent.tests.length; j++) {
                 const test = testComponent.tests[j];
                 // autoRun will run all tests
