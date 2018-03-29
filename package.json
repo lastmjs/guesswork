@@ -5,7 +5,8 @@
   "scripts": {
     "test": "xvfb-run node guesswork.js chromium firefox electron --entry test/index.js",
     "test-local": "node guesswork.js chromium firefox electron --entry test/index.js",
-    "test-manual": "node guesswork.js --entry test/index.js"
+    "test-manual": "node guesswork.js --entry test/index.js",
+    "build-static": "zwitterion --build-static --exclude-dirs node_modules"
   },
   "bin": {
     "guesswork": "guesswork.js"

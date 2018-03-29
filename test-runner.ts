@@ -45,18 +45,6 @@ class TestRunner extends HTMLElement {
 
     set autoRun(val) {
         this._autoRun = val;
-
-        const totalNumTests = this.testComponents.reduce((result, testComponent) => {
-            return result + testComponent.tests.length;
-        }, 0);
-
-        if (window.__karma__) {
-            window.__karma__.info({
-                total: totalNumTests
-            });
-        }
-
-        this.runTests();
     }
 
     get autoRun() {
@@ -192,6 +180,10 @@ class TestRunner extends HTMLElement {
     }
 
     connectedCallback() {
+        if (window.__karma__) {
+            this.autoRun = true;
+        }
+
         //TODO I don't know if this is the best way to do this, but I'm using the event loop to wait until the children to initialize
         if (Array.from(this.children).length > 0 && !Array.from(this.children)[0].prepareTests) {
             setTimeout(() => {
@@ -225,8 +217,15 @@ class TestRunner extends HTMLElement {
 
         this.showChildrenClick();
 
+        const totalNumTests = this.testComponents.reduce((result, testComponent) => {
+            return result + testComponent.tests.length;
+        }, 0);
+
         if (window.__karma__) {
-            this.autoRun = true;
+            window.__karma__.info({
+                total: totalNumTests
+            });
+            this.runTests();
         }
     }
 
@@ -237,7 +236,7 @@ class TestRunner extends HTMLElement {
             for (let j=0; j < testComponent.tests.length; j++) {
                 const test = testComponent.tests[j];
                 // autoRun will run all tests
-                const shouldRun = this.autoRun ? true : this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked;
+                const shouldRun = this.shadowRoot.querySelector(`#${this.getShouldRunInputId(test.description)}`).checked || this.autoRun;
                 if (shouldRun) {
                     const numTests = this.shadowRoot.querySelector(`#${this.getNumTestsInputId(test.description)}`).value || this.numTests;
 
@@ -271,6 +270,8 @@ class TestRunner extends HTMLElement {
                 }
             }
         }
+
+        this.autoRun = false;
 
         if (window.__karma__) {
             window.__karma__.complete();
