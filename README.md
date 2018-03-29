@@ -2,7 +2,7 @@
 
 # Guesswork
 
-Framework for property-based testing in JavaScript. Uses [Karma](https://github.com/karma-runner/karma) for automating browser runs and output. Uses [JSVerify](https://github.com/jsverify/jsverify) for property-based testing utilities in JavaScript, similar to what [QuickCheck](https://github.com/nick8325/quickcheck) does in Haskell. Can be run from a terminal or the web GUI. The web GUI allows fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
+Framework for property-based testing in JavaScript, TypeScript, JSX, and TSX. Uses [Karma](https://github.com/karma-runner/karma) for automating browser runs and output. Uses [JSVerify](https://github.com/jsverify/jsverify) for property-based testing utilities in JavaScript, similar to what [QuickCheck](https://github.com/nick8325/quickcheck) does in Haskell. Uses [Zwitterion](https://github.com/lastmjs/zwitterion) to seamlessly transpile source code on the fly. Can be run from a terminal or the web GUI. The web GUI allows fine-grained control over which tests to run and how many random inputs to generate. The terminal allows for automatic runs of your test suite.
 
 # Installation
 
@@ -53,6 +53,36 @@ Run the web GUI from an npm script:
   }
 }
 ```
+
+## Entry File
+
+The entry point to your tests should be a JavaScript file. When you instruct the tests to execute, the file will be loaded into the browser as an ES Module. You can import all of your test suites into the entry file using ES Modules. You should also import the `test-runner` custom element from Guesswork. Once you have loaded all of your dependencies, write to the DOM and create your full test suite by inserting each of your test suite custom elements as children of your `test-runner` element:
+
+```javascript
+// test/index.js
+import './test-suite1.js';
+import './test-suite2.ts';
+import './test-suite3.jsx';
+import './test-suite4.tsx';
+import '../node_modules/guesswork/test-runner.ts';
+
+window.document.body.innerHTML = `
+    <test-runner>
+        <test-suite1></test-suite1>
+        <test-suite2></test-suite2>
+        <test-suite3></test-suite3>
+        <test-suite4></test-suite4>
+    </test-runner>
+`;
+```
+
+## Test Suites
+
+Each test suite is created as an HTML [custom element](https://developer.mozilla.org/en-US/docs/Web/Web_Components/Using_custom_elements). You must define a `prepareTests` method on the class of your custom element. That function has one parameter, which is the Guesswork test preparation function. This function can be used to create an individual test case. Here is an example test suite:
+
+```javascript
+```
+
 ## Browsers
 
 Specify which browsers you desire for your headless runs as command line arguments. The following browser command line arguments are available:
