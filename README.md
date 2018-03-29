@@ -6,7 +6,7 @@ Framework for property-based testing in JavaScript, TypeScript, JSX, and TSX. Us
 
 # Live Example
 
-[Check out the live example!](https://angry-hawking-9b629c.netlify.com/)
+[Check out the live example!](https://guesswork-demo.netlify.com/)
 
 # Installation
 
@@ -81,7 +81,7 @@ window.document.body.innerHTML = `
 `;
 ```
 
-[Check out the live example!](https://angry-hawking-9b629c.netlify.com/)
+[Check out the live example!](https://guesswork-demo.netlify.com/)
 
 ## Test Suites
 
@@ -97,7 +97,7 @@ class TestSuite1 extends HTMLElement {
     test('Addition is commutative', [jsverify.integer, jsverify.integer], (arbInt1, arbInt2) => {
       return arbInt1 + arbInt2 === arbInt2 + arbInt1;
     });
-    
+
     test('Addition is associative', [jsverify.integer, jsverify.integer, jsverify.integer], (arbInt1, arbInt2, arbInt3) => {
       return (arbInt1 + arbInt2) + arbInt3 === arbInt1 + (arbInt2 + arbInt3);
     });
@@ -107,7 +107,7 @@ class TestSuite1 extends HTMLElement {
 window.customElements.define('test-suite-1', TestSuite1);
 ```
 
-[Check out the live example!](https://angry-hawking-9b629c.netlify.com/)
+[Check out the live example!](https://guesswork-demo.netlify.com/)
 
 ## Browsers
 
