@@ -56,7 +56,7 @@ Run the web GUI from an npm script:
 
 ## Entry File
 
-The entry point to your tests should be a JavaScript file. When you instruct the tests to execute, the file will be loaded into the browser as an ES Module. You can import all of your [test suites](#test-suites) into the entry file using ES Modules. You should also import the `test-runner` custom element from Guesswork. Once you have loaded all of your dependencies, write to the DOM and create your full test suite by inserting each of your test suite custom elements as children of your `test-runner` element:
+The entry point to your tests should be a JavaScript file. When you instruct the tests to execute, the file will be loaded into the browser as an [ES Module](https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/). You can import all of your [test suites](#test-suites) into the entry file using ES Modules. You should also import the `test-runner` custom element from Guesswork. Once you have loaded all of your dependencies, write to the DOM and create your full test suite by inserting each of your test suite custom elements as children of your `test-runner` element:
 
 ```javascript
 // test/index.js
