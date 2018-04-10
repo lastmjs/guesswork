@@ -42,3 +42,24 @@ jobs:
                 command: sudo apt-get update && sudo apt-get install xvfb libgconf-2-4
             - run: npm install
             - run: PATH=$PATH:~/guesswork/firefox && export CHROMIUM_BIN=~/guesswork/chrome-linux/chrome && npm test
+    release:
+        working_directory: ~/guesswork
+        docker:
+            - image: circleci/node:8.11.1@sha256:3fb018db8a18ac6df1114370a2faa45715f6e01575aa98321f433dd9b73c16f7
+        steps:
+            - checkout
+            - run: npm install
+            - run: npx semantic-release
+
+workflows:
+    version: 2
+    test_and_release:
+        jobs:
+            - build
+            - release:
+                requires:
+                    - build
+                filters:
+                    branches:
+                        only:
+                            - master

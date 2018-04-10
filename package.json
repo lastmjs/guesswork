@@ -28,6 +28,11 @@
   "devDependencies": {
     "@webcomponents/custom-elements": "1.1.0",
     "@webcomponents/shadydom": "1.0.14",
-    "electron": "2.0.0-beta.7"
+    "electron": "2.0.0-beta.7",
+    "semantic-release": "^15.1.5"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/lastmjs/guesswork"
   }
 }
