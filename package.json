@@ -14,20 +14,20 @@
   "author": "Jordan Last <jordan.michael.last@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "commander": "^2.15.1",
+    "commander": "2.15.1",
     "jsverify-es-module": "0.0.2",
-    "karma": "^2.0.0",
-    "karma-chrome-launcher": "^2.2.0",
-    "karma-edge-launcher": "^0.4.2",
-    "karma-electron": "^5.3.0",
-    "karma-firefox-launcher": "^1.1.0",
-    "karma-safari-launcher": "^1.0.0",
-    "lit-html": "^0.9.0",
-    "zwitterion": "^0.25.1"
+    "karma": "2.0.0",
+    "karma-chrome-launcher": "2.2.0",
+    "karma-edge-launcher": "0.4.2",
+    "karma-electron": "5.3.0",
+    "karma-firefox-launcher": "1.1.0",
+    "karma-safari-launcher": "1.0.0",
+    "lit-html": "0.9.0",
+    "zwitterion": "0.25.1"
   },
   "devDependencies": {
-    "@webcomponents/custom-elements": "^1.0.9",
-    "@webcomponents/shadydom": "^1.0.13",
-    "electron": "^2.0.0-beta.6"
+    "@webcomponents/custom-elements": "1.0.9",
+    "@webcomponents/shadydom": "1.0.13",
+    "electron": "2.0.0-beta.6"
   }
 }
