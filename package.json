@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@webcomponents/custom-elements": "1.1.0",
-    "@webcomponents/shadydom": "1.0.13",
+    "@webcomponents/shadydom": "1.0.14",
     "electron": "2.0.0-beta.7"
   }
 }
