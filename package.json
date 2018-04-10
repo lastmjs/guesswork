@@ -1,6 +1,6 @@
 {
   "name": "guesswork",
-  "version": "0.10.6",
+  "version": "0.0.0-semantically-released",
   "description": "Framework for property-based testing in JavaScript, TypeScript, JSX, and TSX.",
   "scripts": {
     "test": "xvfb-run node guesswork.js chromium firefox electron --entry test/index.js",
