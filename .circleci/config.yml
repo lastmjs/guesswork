@@ -19,7 +19,7 @@ jobs:
     build:
         working_directory: ~/guesswork
         docker:
-            - image: circleci/node:8.11.1@sha256:cc078ac24326b6ba3e28eb1adb7f300fec7c17d2756850a2ffa436d18d629ddc
+            - image: circleci/node:8.12.0@sha256:a44f73432310d38236bec7a6b7acc1eaa57fa56171e4e698d264bbbaaa5f1b97
         steps:
             - checkout
             - run:
@@ -45,7 +45,7 @@ jobs:
     release:
         working_directory: ~/guesswork
         docker:
-            - image: circleci/node:8.11.1@sha256:cc078ac24326b6ba3e28eb1adb7f300fec7c17d2756850a2ffa436d18d629ddc
+            - image: circleci/node:8.12.0@sha256:a44f73432310d38236bec7a6b7acc1eaa57fa56171e4e698d264bbbaaa5f1b97
         steps:
             - checkout
             - run: npm install
