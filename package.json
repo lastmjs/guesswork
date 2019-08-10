@@ -20,7 +20,7 @@
     "karma-chrome-launcher": "2.2.0",
     "karma-edge-launcher": "0.4.2",
     "karma-electron": "6.0.0",
-    "karma-firefox-launcher": "1.1.0",
+    "karma-firefox-launcher": "1.2.0",
     "karma-safari-launcher": "1.0.0",
     "lit-html": "0.9.0",
     "zwitterion": "0.26.0"
