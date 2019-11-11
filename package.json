@@ -16,7 +16,7 @@
   "dependencies": {
     "commander": "2.15.1",
     "jsverify-es-module": "0.0.2",
-    "karma": "2.0.2",
+    "karma": "4.4.1",
     "karma-chrome-launcher": "2.2.0",
     "karma-edge-launcher": "0.4.2",
     "karma-electron": "6.0.0",
