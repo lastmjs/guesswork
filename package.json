@@ -14,7 +14,7 @@
   "author": "Jordan Last <jordan.michael.last@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "commander": "2.15.1",
+    "commander": "2.20.3",
     "jsverify-es-module": "0.0.2",
     "karma": "2.0.2",
     "karma-chrome-launcher": "2.2.0",
