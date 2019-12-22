@@ -29,7 +29,7 @@
     "@webcomponents/custom-elements": "1.2.1",
     "@webcomponents/shadydom": "1.0.14",
     "electron": "2.0.13",
-    "semantic-release": "15.1.7"
+    "semantic-release": "15.4.0"
   },
   "repository": {
       "type": "git",
